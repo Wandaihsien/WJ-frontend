@@ -6,9 +6,7 @@ import Cart from '../components/svg/Cart.vue';
 import ProductInfo from '../components/ProductInfo.vue';
 
 const showProductInfo = ref(false);
-const showProductInfoHandler = () => {
-  showProductInfo.value = !showProductInfo.value;
-};
+
 </script>
 
 <template>

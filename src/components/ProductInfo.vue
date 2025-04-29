@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import Cross from './svg/Cross.vue';
 import Plus from './svg/plus.vue';
 import Minus from './svg/Minus.vue';
