@@ -1,31 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AllProducts from '../views/AllProducts.vue'
 import Login from '../views/Login.vue'
-import SignUp from '../views/SignUp.vue'
-import Users from '../views/Users.vue'
+import Signup from '../views/Signup.vue'
+import User from '../views/User.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_API_URL),
   routes:[
     {
-      path: '/',
+      path: '/allproducts',
       name: 'Allproducts',
       component: AllProducts,
     },
     {
-      path: '/Login',
+      path: '/login',
       name: 'Login',
       component: Login,
     },
     {
-      path: '/Signup',
+      path: '/signup',
       name: 'Signup',
-      component: SignUp,
+      component: Signup,
     },
     {
-      path: '/Users',
-      name: 'Users',
-      component: Users,
+      path: '/user',
+      name: 'User',
+      component: User,
     }
   ],
 })

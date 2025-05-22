@@ -1,19 +1,56 @@
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useCartStateStore } from '../stores/cartStateStore'
+import axios from 'axios';
 import NavBar from '../components/NavBar.vue';
 import Footer from '../components/Footer.vue';
 import Cart from '../components/svg/Cart.vue';
 import ProductInfo from '../components/ProductInfo.vue';
 
-const showProductInfo = ref(false);
+const cartStateStore = useCartStateStore()
 
+const showProductInfo = ref(false);
+const selectedProduct = ref<Product | null>(null);
+
+interface Product {
+  id : number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+const API_URL = import.meta.env.VITE_API_URL;
+const products = ref<Product[]>([]);
+const fetchProducts = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/api/products`);
+    products.value = res.data;
+  } catch (error) {
+    console.error('取得商品失敗' ,error);
+  }
+};
+
+
+const handleClickProduct = (product: Product) => {
+  selectedProduct.value = product
+  showProductInfo.value = true
+}
+
+
+onMounted(() => {
+  fetchProducts();
+});
 </script>
 
 <template>
   <div class="w-full min-h-screen flex flex-col">
     <NavBar />
     <main class="flex-grow relative">
-      <ProductInfo v-if="showProductInfo" @close="showProductInfo = false"/>
+      <ProductInfo
+      v-if="showProductInfo && selectedProduct"
+      @close="showProductInfo = false"
+      @openCart="cartStateStore.isCartOpen = true"
+      :product="selectedProduct"/>
       <div class="w-full md:grid grid-cols-4 lg:grid-cols-8">
         <div class="hidden md:block col-span-1 lg:col-span-2 pl-[50px]">
           <div class="md:mt-[20px] ml-[50px] text-[12px] text-gray-500">全部商品 / 所有商品</div>
@@ -37,18 +74,19 @@ const showProductInfo = ref(false);
             </button>
           </div>
           <div class="grid grid-cols-2 mx-[10px] gap-x-[10px] gap-y-[60px] mt-[40px] sm:grid-cols-3">
-            <div class="relative">
-              <a href="#">
+            <div v-for="product in products" :key="product.id" class="relative">
+              <a class="cursor-default pointer-events-none" href="#">
                 <div class="aspect-square">
-                  <img src="/src/img/barcelet.jpg" alt="#" class="object-cover w-full h-full">
+                  <img :src="product.image" alt="商品圖片" class="object-cover w-full h-full">
                 </div>
               </a>
-              <div class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer">
-                <Cart @click="showProductInfo = !showProductInfo"/>
+              <div @click="handleClickProduct(product)"
+              class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer">
+                <Cart />
               </div>
               <div class="mt-[10px]">
-                <div class="text-xs text-center">8mm 山度士手鍊</div>
-                <div class="text-xs text-center pt-[5px] font-black" style=" -webkit-text-stroke: 0.5px black">NT$7,980</div>
+                <div class="text-xs text-center">{{ product.name }}</div>
+                <div class="text-xs text-center pt-[5px] font-black" style=" -webkit-text-stroke: 0.5px black">NT${{ product.price }}</div>
               </div>
             </div>
           </div>

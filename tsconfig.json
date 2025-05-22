@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
     "module": "esnext",
-    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": false,
     "esModuleInterop": true,
     "isolatedModules": true,
     "moduleResolution": "node",

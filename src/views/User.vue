@@ -1,11 +1,31 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
+import { checkAuthState } from '../stores/authState' 
+import router from '../router'
 import NavBar from '../components/NavBar.vue'
-import userIcon2 from '../components/svg/userIcon2.vue'
+import UserIcon2 from '../components/svg/UserIcon2.vue'
 import Footer from '../components/Footer.vue'
 
 const tabs = ['個人資訊', '訂單']
 const activeTab = ref('個人資訊')
+
+const authState = checkAuthState()
+const email = ref('')
+
+const loadUserEmail = () => {
+  if(localStorage.getItem('token')) {
+    email.value = localStorage.getItem('email')
+  }
+}
+
+const logout = () => {
+  authState.LogOut()
+  router.push('/login')
+}
+
+onMounted(()=> {
+  loadUserEmail()
+})
 </script>
 
 <template>
@@ -13,7 +33,7 @@ const activeTab = ref('個人資訊')
       <NavBar />
       <main class="w-full">
         <div class="hidden sm:block sm:max-w-[718px] sm:mx-auto sm:my-[20px] md:max-w-[938px] lg:max-w-[1108px]">
-          <a href="" class="underline text-[13px]">登出</a>
+          <button @click="logout" class="underline text-[13px]">登出</button>
         </div>
         <div class="sm:border sm:max-w-[718px] sm:mx-auto md:max-w-[938px] lg:max-w-[1108px]">
           <div class="w-full h-[56px] relative flex justify-center text-[12px] text-gray-500 :after:content-[''] after:w-full after:h-[1px] after:bg-gray-300 after:absolute after:left-0 after:bottom-0
@@ -31,41 +51,37 @@ const activeTab = ref('個人資訊')
           <div class="w-full px-[30px] pt-[20px]
           sm:">
             <div class="sm:hidden">
-              <a href="" class="underline text-[13px]">登出</a>
+              <button @click="signout" class="underline text-[13px]">登出</button>
             </div>
             <form v-if="activeTab === '個人資訊'" @submit.prevent="submitForm" class="w-full text-[14px]"> 
               <div class="flex mt-[30px] gap-[10px]">
-                <userIcon2 class="size-5 text-gray-300"/>
-                <p class="text-[15px] font-black pt-[2px]">XXX</p>
+                <UserIcon2 class="size-5 text-gray-300"/>
+                <p class="text-[15px] font-black pt-[2px]">{{ email }}</p>
               </div>
               <div class="w-full md:flex md:gap-[20px]">
                 <div class="border mt-[40px] p-[40px] md:w-[50%]">
                   <div class="flex gap-[10px]">
-                    <userIcon2 class="size-5 text-gray-300"/>
+                    <UserIcon2 class="size-5 text-gray-300"/>
                     <p class="text-[15px] font-bold pt-[2px]">會員資料</p>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
                     <label for="name">姓名</label>
                     <input 
                     type="text"
+                    id="name"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="email">電郵</label>
-                    <input 
-                    type="email"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="tel">手機號碼</label>
+                    <label for="phone">手機號碼</label>
                     <input 
                     type="tel"
+                    id="phone"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
                     <label for="gender">性別</label>
                     <select 
-                    type="text"
+                    id="gender"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none">
                       <option disabled value>請選擇</option>
                       <option value="male">男生</option>
@@ -76,41 +92,44 @@ const activeTab = ref('個人資訊')
                 </div>
                 <div class="border mt-[40px] p-[40px] md:w-[50%]">
                   <div class="flex gap-[10px]">
-                    <userIcon2 class="size-5 text-gray-300"/>
+                    <UserIcon2 class="size-5 text-gray-300"/>
                     <p class="text-[15px] font-bold pt-[2px]">送貨資料</p>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="text">收件人</label>
+                    <label for="recipient">收件人</label>
                     <input 
                     type="text"
+                    id="recipient"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="tel">收件人電話號碼</label>
+                    <label for="recipientPhone">收件人電話號碼</label>
                     <input 
                     type="tel"
+                    id="recipientPhone"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
-                    <label for="">城市/縣</label>
+                  <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
+                    <label for="city">城市/縣</label>
                     <select 
-                    type="text"
+                    id="city"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none">
                       <option disabled value>請選擇</option>
                     </select>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
-                    <label for="">地區</label>
+                    <label for="district">地區</label>
                     <select 
-                    type="text"
+                    id="district"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none">
                       <option disabled value>請選擇</option>
                     </select>
-                  </div>
+                  </div> -->
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="">地址</label>
+                    <label for="address">地址</label>
                     <input 
-                    type="tel"
+                    type="text"
+                    id="address"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                 </div>
