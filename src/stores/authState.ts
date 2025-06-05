@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref,computed } from 'vue'
+import { useCartStore } from '../stores/useCartStore'
+
 
 export const checkAuthState = defineStore('authStore',()=> {
 
+  const cartStore = useCartStore()
   const token = ref< string | null>(localStorage.getItem('token'))
   const userEmail = ref< string | null>(null)
 
   const isLoggedIn = computed(() => {
     if(token) {
-      return true
-    }{
-      return false
+      return !!token.value
     }
   })
 
@@ -21,9 +22,10 @@ export const checkAuthState = defineStore('authStore',()=> {
     localStorage.setItem('email', email)
   }
 
-  const LogOut = () => {
+  const logout = () => {
     userEmail.value = null
     token.value = null
+    cartStore.clearCart()
     localStorage.removeItem('token')
     localStorage.removeItem('email')
   }
@@ -33,6 +35,6 @@ export const checkAuthState = defineStore('authStore',()=> {
     isLoggedIn,
     userEmail,
     setUser,
-    LogOut
+    logout
   }
 })

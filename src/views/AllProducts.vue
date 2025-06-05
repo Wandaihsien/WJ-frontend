@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useCartStateStore } from '../stores/cartStateStore'
+import { checkAuthState } from '../stores/authState'
+import Swal from 'sweetalert2'
 import axios from 'axios';
 import NavBar from '../components/NavBar.vue';
 import Footer from '../components/Footer.vue';
@@ -8,6 +10,7 @@ import Cart from '../components/svg/Cart.vue';
 import ProductInfo from '../components/ProductInfo.vue';
 
 const cartStateStore = useCartStateStore()
+const authState = checkAuthState()
 
 const showProductInfo = ref(false);
 const selectedProduct = ref<Product | null>(null);
@@ -19,21 +22,30 @@ interface Product {
   image: string;
 }
 
-const API_URL = import.meta.env.VITE_API_URL;
-const products = ref<Product[]>([]);
+const API_URL = import.meta.env.VITE_API_URL
+const products = ref<Product[]>([])
 const fetchProducts = async () => {
   try {
     const res = await axios.get(`${API_URL}/api/products`);
-    products.value = res.data;
+    products.value = res.data
   } catch (error) {
-    console.error('取得商品失敗' ,error);
+    console.error('取得商品失敗' ,error)
   }
 };
 
 
 const handleClickProduct = (product: Product) => {
-  selectedProduct.value = product
-  showProductInfo.value = true
+  if(authState.isLoggedIn){
+    selectedProduct.value = product
+    showProductInfo.value = true
+  }else {
+    Swal.fire({
+      icon:'error',
+      title:'請先登入會員',
+      color: '#e1e1e1',
+      background: '#27272a',
+    })
+  }
 }
 
 

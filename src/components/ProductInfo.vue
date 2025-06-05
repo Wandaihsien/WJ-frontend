@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref,defineProps, defineEmits } from 'vue';
 import { useCartStore } from '../stores/useCartStore';
-import { Product, CartItem } from '../types/types'
+import { Product } from '../types/types'
 import Cross from './svg/Cross.vue';
 import Plus from './svg/Plus.vue';
 import Minus from './svg/Minus.vue';
@@ -32,8 +32,9 @@ const add = () => {
 
 
 const cartStore = useCartStore()
-const addProductToCart = (product:Product,addQuantity:number) => {
-  cartStore.addToCart(product,addQuantity)
+const addProductToCart = async (product:Product,addQuantity:number) => {
+  await cartStore.addToCart(product,addQuantity)
+  console.log('點擊加入購物車', product.id, addQuantity)
   emit('close')
   emit('openCart')
 }

@@ -24,7 +24,7 @@ const submit = async() => {
     const token = response.data.token
     if(token) {
       authState.setUser(email.value, token)
-      router.push('/Allproducts')
+      router.push('/')
     }else {
       Swal.fire({
         icon:'error',

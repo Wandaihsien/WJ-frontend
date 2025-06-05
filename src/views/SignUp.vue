@@ -62,7 +62,6 @@ const signup = async () => {
       }
     })
 
-    console.log(response.status)
     if(response.status === 200 || response.status === 201) {
       Swal.fire({
         icon:'success',

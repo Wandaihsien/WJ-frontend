@@ -1,6 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted} from 'vue'
 import { checkAuthState } from '../stores/authState' 
+import axios from 'axios'
+import Swal from 'sweetalert2'
 import router from '../router'
 import NavBar from '../components/NavBar.vue'
 import UserIcon2 from '../components/svg/UserIcon2.vue'
@@ -14,17 +16,106 @@ const email = ref('')
 
 const loadUserEmail = () => {
   if(localStorage.getItem('token')) {
-    email.value = localStorage.getItem('email')
+    const emailFromStorage = localStorage.getItem('email')
+    if (emailFromStorage) {
+      email.value = emailFromStorage
+    }
   }
 }
 
 const logout = () => {
-  authState.LogOut()
+  authState.logout()
   router.push('/login')
+}
+
+interface ShippingInfo {
+  recipient : string,
+  recipientPhone : string,
+  address: string,
+}
+
+interface UserData {
+  name: string,
+  phone: string
+}
+
+const API_URL = import.meta.env.VITE_API_URL
+const shippingInfo = ref<ShippingInfo>({
+  recipient:'',
+  recipientPhone:'',
+  address:''
+})
+
+const userData = ref<UserData>({
+  name: '',
+  phone:'' 
+})
+
+const fetchShippingInfo = async() => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await axios.get(`${API_URL}/api/shippingInfo`,{
+      headers: { 
+        Authorization:`Bearer ${token}`
+      }
+    })
+    shippingInfo.value = res.data.shippingInfo
+  } catch(error) {
+    console.error('取得購物資訊失敗',error)
+  }
+}
+
+const fetchUserData = async() => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await axios.get(`${API_URL}/api/userData`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    userData.value = res.data.userData
+  }catch(error) {
+    console.error('取得會員資料失敗',error)
+  }
+}
+
+const submitForm = async() => {
+  try {
+    const token = localStorage.getItem('token')
+    // 建立或更新購物資訊
+    await axios.post(`${API_URL}/api/shippingInfo`, shippingInfo.value, {
+      headers: {
+        Authorization:`Bearer ${token}`
+      }
+    })
+    
+    // 更新會員資訊
+    await axios.put(`${API_URL}/api/userData`, userData.value, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    Swal.fire({
+      icon:'success',
+      title:'資料送出成功',
+      color: '#e1e1e1',
+      background: '#27272a',
+    })
+  } catch(error) {
+    console.error('送出用戶資訊失敗',error)
+  }
+}
+
+const cancelButton = () => {
+  fetchShippingInfo()
+  fetchUserData()
 }
 
 onMounted(()=> {
   loadUserEmail()
+  fetchShippingInfo()
+  fetchUserData()
 })
 </script>
 
@@ -51,7 +142,7 @@ onMounted(()=> {
           <div class="w-full px-[30px] pt-[20px]
           sm:">
             <div class="sm:hidden">
-              <button @click="signout" class="underline text-[13px]">登出</button>
+              <button @click="logout" class="underline text-[13px]">登出</button>
             </div>
             <form v-if="activeTab === '個人資訊'" @submit.prevent="submitForm" class="w-full text-[14px]"> 
               <div class="flex mt-[30px] gap-[10px]">
@@ -69,6 +160,7 @@ onMounted(()=> {
                     <input 
                     type="text"
                     id="name"
+                    v-model="userData.name"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
@@ -76,9 +168,10 @@ onMounted(()=> {
                     <input 
                     type="tel"
                     id="phone"
+                    v-model="userData.phone"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
+                  <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
                     <label for="gender">性別</label>
                     <select 
                     id="gender"
@@ -88,7 +181,7 @@ onMounted(()=> {
                       <option value="female">女生</option>
                       <option value="other">不透漏</option>
                     </select>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="border mt-[40px] p-[40px] md:w-[50%]">
                   <div class="flex gap-[10px]">
@@ -100,6 +193,7 @@ onMounted(()=> {
                     <input 
                     type="text"
                     id="recipient"
+                    v-model="shippingInfo.recipient"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
@@ -107,6 +201,7 @@ onMounted(()=> {
                     <input 
                     type="tel"
                     id="recipientPhone"
+                    v-model="shippingInfo.recipientPhone"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                   <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
@@ -130,12 +225,13 @@ onMounted(()=> {
                     <input 
                     type="text"
                     id="address"
+                    v-model="shippingInfo.address"
                     class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
                   </div>
                 </div>
               </div>
               <div class="w-full flex gap-[10px] mt-[40px] mb-[40px] text-[14px] md:justify-end">
-                <button type="button" class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px]">取消</button>
+                <button @click="cancelButton" type="button" class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px]">取消</button>
                 <button type="submit" class="border bg-black w-[50%] h-[34px] text-white rounded-sm md:max-w-[82px]">儲存變更</button>
               </div>
             </form>
