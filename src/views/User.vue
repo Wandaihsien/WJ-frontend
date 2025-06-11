@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted} from 'vue'
-import { checkAuthState } from '../stores/authState' 
+import { ref, onMounted } from 'vue'
+import { checkAuthState } from '../stores/authState'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import router from '../router'
@@ -15,7 +15,7 @@ const authState = checkAuthState()
 const email = ref('')
 
 const loadUserEmail = () => {
-  if(localStorage.getItem('token')) {
+  if (localStorage.getItem('token')) {
     const emailFromStorage = localStorage.getItem('email')
     if (emailFromStorage) {
       email.value = emailFromStorage
@@ -29,81 +29,81 @@ const logout = () => {
 }
 
 interface ShippingInfo {
-  recipient : string,
-  recipientPhone : string,
-  address: string,
+  recipient: string
+  recipientPhone: string
+  address: string
 }
 
 interface UserData {
-  name: string,
+  name: string
   phone: string
 }
 
 const API_URL = import.meta.env.VITE_API_URL
 const shippingInfo = ref<ShippingInfo>({
-  recipient:'',
-  recipientPhone:'',
-  address:''
+  recipient: '',
+  recipientPhone: '',
+  address: '',
 })
 
 const userData = ref<UserData>({
   name: '',
-  phone:'' 
+  phone: '',
 })
 
-const fetchShippingInfo = async() => {
+const fetchShippingInfo = async () => {
   try {
     const token = localStorage.getItem('token')
-    const res = await axios.get(`${API_URL}/api/shippingInfo`,{
-      headers: { 
-        Authorization:`Bearer ${token}`
-      }
+    const res = await axios.get(`${API_URL}/api/shippingInfo`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
     shippingInfo.value = res.data.shippingInfo
-  } catch(error) {
-    console.error('取得購物資訊失敗',error)
+  } catch (error) {
+    console.error('取得購物資訊失敗', error)
   }
 }
 
-const fetchUserData = async() => {
+const fetchUserData = async () => {
   try {
     const token = localStorage.getItem('token')
     const res = await axios.get(`${API_URL}/api/userData`, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
     userData.value = res.data.userData
-  }catch(error) {
-    console.error('取得會員資料失敗',error)
+  } catch (error) {
+    console.error('取得會員資料失敗', error)
   }
 }
 
-const submitForm = async() => {
+const submitForm = async () => {
   try {
     const token = localStorage.getItem('token')
     // 建立或更新購物資訊
     await axios.post(`${API_URL}/api/shippingInfo`, shippingInfo.value, {
       headers: {
-        Authorization:`Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-    
+
     // 更新會員資訊
     await axios.put(`${API_URL}/api/userData`, userData.value, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
 
     Swal.fire({
-      icon:'success',
-      title:'資料送出成功',
+      icon: 'success',
+      title: '資料送出成功',
       color: '#e1e1e1',
       background: '#27272a',
     })
-  } catch(error) {
-    console.error('送出用戶資訊失敗',error)
+  } catch (error) {
+    console.error('送出用戶資訊失敗', error)
   }
 }
 
@@ -112,7 +112,7 @@ const cancelButton = () => {
   fetchUserData()
 }
 
-onMounted(()=> {
+onMounted(() => {
   loadUserEmail()
   fetchShippingInfo()
   fetchUserData()
@@ -121,57 +121,81 @@ onMounted(()=> {
 
 <template>
   <div class="w-full h-screen">
-      <NavBar />
-      <main class="w-full">
-        <div class="hidden sm:block sm:max-w-[718px] sm:mx-auto sm:my-[20px] md:max-w-[938px] lg:max-w-[1108px]">
-          <button @click="logout" class="underline text-[13px]">登出</button>
-        </div>
-        <div class="sm:border sm:max-w-[718px] sm:mx-auto md:max-w-[938px] lg:max-w-[1108px]">
-          <div class="w-full h-[56px] relative flex justify-center text-[12px] text-gray-500 :after:content-[''] after:w-full after:h-[1px] after:bg-gray-300 after:absolute after:left-0 after:bottom-0
-        sm:after:w-0">
-            <div v-for ="(tab , index) in tabs"
+    <NavBar />
+    <main class="w-full">
+      <div
+        class="hidden sm:block sm:max-w-[718px] sm:mx-auto sm:my-[20px] md:max-w-[938px] lg:max-w-[1108px]"
+      >
+        <button @click="logout" class="underline text-[13px]">登出</button>
+      </div>
+      <div
+        class="sm:border sm:max-w-[718px] sm:mx-auto md:max-w-[938px] lg:max-w-[1108px]"
+      >
+        <div
+          class="w-full h-[56px] relative flex justify-center text-[12px] text-gray-500 :after:content-[''] after:w-full after:h-[1px] after:bg-gray-300 after:absolute after:left-0 after:bottom-0 sm:after:w-0"
+        >
+          <div
+            v-for="(tab, index) in tabs"
             :key="index"
             @click="activeTab = tab"
             class="relative cursor-pointer pt-[10px] sm:pt-[0] sm:w-full sm:flex"
-            :class="{'sm:border-r sm:border-gray-300': index !== tabs.length - 1}">
-              <span class="w-full px-[5px] sm:h-[56px] sm:flex sm:items-center sm:justify-center"
-              :class="activeTab === tab ? 'text-black' : 'text-gray-500 sm:bg-gray-100 sm:border-b'">{{ tab }}</span>
-              <div class="w-full h-[3px] absolute left-0 bottom-2 sm:hidden" :class="activeTab === tab ? 'bg-black' : 'bg-gray-200'" ></div>
-            </div>
+            :class="{
+              'sm:border-r sm:border-gray-300': index !== tabs.length - 1,
+            }"
+          >
+            <span
+              class="w-full px-[5px] sm:h-[56px] sm:flex sm:items-center sm:justify-center"
+              :class="
+                activeTab === tab
+                  ? 'text-black'
+                  : 'text-gray-500 sm:bg-gray-100 sm:border-b'
+              "
+              >{{ tab }}</span
+            >
+            <div
+              class="w-full h-[3px] absolute left-0 bottom-2 sm:hidden"
+              :class="activeTab === tab ? 'bg-black' : 'bg-gray-200'"
+            ></div>
           </div>
-          <div class="w-full px-[30px] pt-[20px]
-          sm:">
-            <div class="sm:hidden">
-              <button @click="logout" class="underline text-[13px]">登出</button>
+        </div>
+        <div class="w-full px-[30px] pt-[20px] sm:">
+          <div class="sm:hidden">
+            <button @click="logout" class="underline text-[13px]">登出</button>
+          </div>
+          <form
+            v-if="activeTab === '個人資訊'"
+            @submit.prevent="submitForm"
+            class="w-full text-[14px]"
+          >
+            <div class="flex mt-[30px] gap-[10px]">
+              <UserIcon2 class="size-5 text-gray-300" />
+              <p class="text-[15px] font-black pt-[2px]">{{ email }}</p>
             </div>
-            <form v-if="activeTab === '個人資訊'" @submit.prevent="submitForm" class="w-full text-[14px]"> 
-              <div class="flex mt-[30px] gap-[10px]">
-                <UserIcon2 class="size-5 text-gray-300"/>
-                <p class="text-[15px] font-black pt-[2px]">{{ email }}</p>
-              </div>
-              <div class="w-full md:flex md:gap-[20px]">
-                <div class="border mt-[40px] p-[40px] md:w-[50%]">
-                  <div class="flex gap-[10px]">
-                    <UserIcon2 class="size-5 text-gray-300"/>
-                    <p class="text-[15px] font-bold pt-[2px]">會員資料</p>
-                  </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="name">姓名</label>
-                    <input 
+            <div class="w-full md:flex md:gap-[20px]">
+              <div class="border mt-[40px] p-[40px] md:w-[50%]">
+                <div class="flex gap-[10px]">
+                  <UserIcon2 class="size-5 text-gray-300" />
+                  <p class="text-[15px] font-bold pt-[2px]">會員資料</p>
+                </div>
+                <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
+                  <label for="name">姓名</label>
+                  <input
                     type="text"
                     id="name"
                     v-model="userData.name"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="phone">手機號碼</label>
-                    <input 
+                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"
+                  />
+                </div>
+                <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
+                  <label for="phone">手機號碼</label>
+                  <input
                     type="tel"
                     id="phone"
                     v-model="userData.phone"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
-                  <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
+                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"
+                  />
+                </div>
+                <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
                     <label for="gender">性別</label>
                     <select 
                     id="gender"
@@ -182,29 +206,31 @@ onMounted(()=> {
                       <option value="other">不透漏</option>
                     </select>
                   </div> -->
+              </div>
+              <div class="border mt-[40px] p-[40px] md:w-[50%]">
+                <div class="flex gap-[10px]">
+                  <UserIcon2 class="size-5 text-gray-300" />
+                  <p class="text-[15px] font-bold pt-[2px]">送貨資料</p>
                 </div>
-                <div class="border mt-[40px] p-[40px] md:w-[50%]">
-                  <div class="flex gap-[10px]">
-                    <UserIcon2 class="size-5 text-gray-300"/>
-                    <p class="text-[15px] font-bold pt-[2px]">送貨資料</p>
-                  </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="recipient">收件人</label>
-                    <input 
+                <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
+                  <label for="recipient">收件人</label>
+                  <input
                     type="text"
                     id="recipient"
                     v-model="shippingInfo.recipient"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="recipientPhone">收件人電話號碼</label>
-                    <input 
+                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"
+                  />
+                </div>
+                <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
+                  <label for="recipientPhone">收件人電話號碼</label>
+                  <input
                     type="tel"
                     id="recipientPhone"
                     v-model="shippingInfo.recipientPhone"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
-                  <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
+                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"
+                  />
+                </div>
+                <!-- <div class="flex flex-col gap-[10px] mt-[20px] mb-[20px] text-gray-500 ">
                     <label for="city">城市/縣</label>
                     <select 
                     id="city"
@@ -220,55 +246,71 @@ onMounted(()=> {
                       <option disabled value>請選擇</option>
                     </select>
                   </div> -->
-                  <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
-                    <label for="address">地址</label>
-                    <input 
+                <div class="flex flex-col gap-[10px] mt-[20px] text-gray-500">
+                  <label for="address">地址</label>
+                  <input
                     type="text"
                     id="address"
                     v-model="shippingInfo.address"
-                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"/>
-                  </div>
+                    class="border w-full h-[44px] p-[10px] text-[14px] focus:outline-none"
+                  />
                 </div>
               </div>
-              <div class="w-full flex gap-[10px] mt-[40px] mb-[40px] text-[14px] md:justify-end">
-                <button @click="cancelButton" type="button" class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px]">取消</button>
-                <button type="submit" class="border bg-black w-[50%] h-[34px] text-white rounded-sm md:max-w-[82px]">儲存變更</button>
-              </div>
-            </form>
-            <table v-if="activeTab === '訂單'"
-            class="w-full my-[50px] border-collapse table-auto text-sm">
-              <thead class="hidden sm:table-header-group">
-                <tr>
-                  <th class="border px-4 py-2 text-left">訂單號碼</th>
-                  <th class="border px-4 py-2 text-left">訂單日期</th>
-                  <th class="border px-4 py-2 text-left">合計</th>
-                  <th class="border px-4 py-2 text-left">訂單狀態</th>
-                </tr>
-              </thead>
-              <tbody class="text-[12px]">
-                <tr class="block sm:table-row border sm:border-0 mb-4 md:mb-0">
-                  <td class="block sm:table-cell border px-4 py-2">
-                    <span class="sm:hidden font-semibold">訂單號碼：</span>
-                    20250122170216520
-                  </td> 
-                  <td class="block sm:table-cell border px-4 py-2">
-                    <span class="sm:hidden font-semibold">訂單日期：</span>
-                    2025-01-23
-                  </td>
-                  <td class="block sm:table-cell border px-4 py-2">
-                    <span class="sm:hidden font-semibold">合計：</span>
-                    NT$1,245
-                  </td>
-                  <td class="block sm:table-cell border px-4 py-2">
-                    <span class="sm:hidden font-semibold">訂單狀態：</span>
-                    未送達
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            </div>
+            <div
+              class="w-full flex gap-[10px] mt-[40px] mb-[40px] text-[14px] md:justify-end"
+            >
+              <button
+                @click="cancelButton"
+                type="button"
+                class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px]"
+              >
+                取消
+              </button>
+              <button
+                type="submit"
+                class="border bg-black w-[50%] h-[34px] text-white rounded-sm md:max-w-[82px]"
+              >
+                儲存變更
+              </button>
+            </div>
+          </form>
+          <table
+            v-if="activeTab === '訂單'"
+            class="w-full my-[50px] border-collapse table-auto text-sm"
+          >
+            <thead class="hidden sm:table-header-group">
+              <tr>
+                <th class="border px-4 py-2 text-left">訂單號碼</th>
+                <th class="border px-4 py-2 text-left">訂單日期</th>
+                <th class="border px-4 py-2 text-left">合計</th>
+                <th class="border px-4 py-2 text-left">訂單狀態</th>
+              </tr>
+            </thead>
+            <tbody class="text-[12px]">
+              <tr class="block sm:table-row border sm:border-0 mb-4 md:mb-0">
+                <td class="block sm:table-cell border px-4 py-2">
+                  <span class="sm:hidden font-semibold">訂單號碼：</span>
+                  20250122170216520
+                </td>
+                <td class="block sm:table-cell border px-4 py-2">
+                  <span class="sm:hidden font-semibold">訂單日期：</span>
+                  2025-01-23
+                </td>
+                <td class="block sm:table-cell border px-4 py-2">
+                  <span class="sm:hidden font-semibold">合計：</span>
+                  NT$1,245
+                </td>
+                <td class="block sm:table-cell border px-4 py-2">
+                  <span class="sm:hidden font-semibold">訂單狀態：</span>
+                  未送達
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <Footer />
-      </main>
+      </div>
+      <Footer />
+    </main>
   </div>
 </template>

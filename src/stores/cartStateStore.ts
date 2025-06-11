@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCartStateStore = defineStore('cartState', () => {
-  const isCartOpen =  ref(false)
+  const isCartOpen = ref(false)
 
   const openCart = () => {
     isCartOpen.value = true
@@ -11,10 +11,10 @@ export const useCartStateStore = defineStore('cartState', () => {
   const closeCart = () => {
     isCartOpen.value = false
   }
-  
+
   return {
     isCartOpen,
     openCart,
-    closeCart
+    closeCart,
   }
 })

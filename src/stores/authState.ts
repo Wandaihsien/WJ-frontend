@@ -1,24 +1,22 @@
-import { defineStore } from 'pinia';
-import { ref,computed } from 'vue'
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 import { useCartStore } from '../stores/useCartStore'
 
-
-export const checkAuthState = defineStore('authStore',()=> {
-
+export const checkAuthState = defineStore('authStore', () => {
   const cartStore = useCartStore()
-  const token = ref< string | null>(localStorage.getItem('token'))
-  const userEmail = ref< string | null>(null)
+  const token = ref<string | null>(localStorage.getItem('token'))
+  const userEmail = ref<string | null>(null)
 
   const isLoggedIn = computed(() => {
-    if(token) {
+    if (token) {
       return !!token.value
     }
   })
 
-  const setUser = (email:string, newToken:string) => {
+  const setUser = (email: string, newToken: string) => {
     userEmail.value = email
     token.value = newToken
-    localStorage.setItem('token',newToken)
+    localStorage.setItem('token', newToken)
     localStorage.setItem('email', email)
   }
 
@@ -35,6 +33,6 @@ export const checkAuthState = defineStore('authStore',()=> {
     isLoggedIn,
     userEmail,
     setUser,
-    logout
+    logout,
   }
 })

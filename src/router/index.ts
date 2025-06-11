@@ -8,37 +8,37 @@ import CheckOut from '../views/CheckOut.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_API_URL),
-  routes:[
+  routes: [
     {
       path: '/',
       name: 'Allproducts',
-      component: AllProducts
+      component: AllProducts,
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
     },
     {
       path: '/signup',
       name: 'Signup',
-      component: Signup
+      component: Signup,
     },
     {
       path: '/user',
       name: 'User',
-      component: User
+      component: User,
     },
     {
       path: '/cart',
       name: 'Cart',
-      component: Cart
+      component: Cart,
     },
     {
       path: '/checkout',
       name: 'Checkout',
-      component: CheckOut
-    }
+      component: CheckOut,
+    },
   ],
 })
 
