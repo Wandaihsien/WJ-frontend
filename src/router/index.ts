@@ -5,6 +5,8 @@ import Signup from '../views/Signup.vue'
 import User from '../views/User.vue'
 import Cart from '../views/Cart.vue'
 import CheckOut from '../views/CheckOut.vue'
+import OrderSuccess from '../views/orderSuccess.vue'
+import OrderFailed from '../views/OrderFailed.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_API_URL),
@@ -38,6 +40,16 @@ const router = createRouter({
       path: '/checkout',
       name: 'Checkout',
       component: CheckOut,
+    },
+    {
+      path: '/checkout/success',
+      name: 'Ordersuccess',
+      component: OrderSuccess,
+    },
+    {
+      path: '/checkout/failed',
+      name: 'Orderfailed',
+      component: OrderFailed,
     },
   ],
 })
