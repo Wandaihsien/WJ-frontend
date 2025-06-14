@@ -2,6 +2,7 @@
 import { ref, defineProps, defineEmits } from 'vue'
 import { useCartStore } from '../stores/useCartStore'
 import { Product } from '../types/types'
+import router from '../router'
 import Cross from './svg/Cross.vue'
 import Plus from './svg/Plus.vue'
 import Minus from './svg/Minus.vue'
@@ -30,11 +31,23 @@ const add = () => {
 }
 
 const cartStore = useCartStore()
+// 加購物車
 const addProductToCart = async (product: Product, addQuantity: number) => {
   await cartStore.addToCart(product, addQuantity)
-  console.log('點擊加入購物車', product.id, addQuantity)
   emit('close')
   emit('openCart')
+}
+
+// 加購物車並直接跳轉購物車頁面
+const BuyProduct = async (product: Product, addQuantity: number) => {
+  await cartStore.addToCart(product, addQuantity)
+  emit('close')
+}
+
+const buyNow = async (product: Product, addQuantity: number) => {
+  await BuyProduct(product, addQuantity)
+  emit('close')
+  router.push('/cart')
 }
 </script>
 
@@ -71,7 +84,12 @@ const addProductToCart = async (product: Product, addQuantity: number) => {
           >
             <Minus />
           </button>
-          <p class="mx-[40px]">{{ addQuantity }}</p>
+          <input
+            v-model="addQuantity"
+            type="number"
+            class="w-[90px] text-center focus:outline-none"
+            min="1"
+          />
           <button
             @click="add"
             class="w-[34px] h-[34px] border-[2px] border-black rounded-[50%] cursor-pointer flex justify-center items-center"
@@ -88,6 +106,7 @@ const addProductToCart = async (product: Product, addQuantity: number) => {
           加入購物車
         </button>
         <button
+          @click="buyNow(product, addQuantity)"
           class="w-[50%] h-[45px] bg-black text-white text-[14px] font-bold"
         >
           立即購買

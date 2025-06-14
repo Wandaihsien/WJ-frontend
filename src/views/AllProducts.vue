@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useCartStateStore } from '../stores/cartStateStore'
 import { checkAuthState } from '../stores/authState'
+import { Product } from '../types/types'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import NavBar from '../components/NavBar.vue'
@@ -14,13 +15,6 @@ const authState = checkAuthState()
 
 const showProductInfo = ref(false)
 const selectedProduct = ref<Product | null>(null)
-
-interface Product {
-  id: number
-  name: string
-  price: number
-  image: string
-}
 
 const API_URL = import.meta.env.VITE_API_URL
 const products = ref<Product[]>([])

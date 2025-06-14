@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { checkAuthState } from '../stores/authState'
+import { ShippingInfo, UserData } from '../types/types'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import router from '../router'
@@ -26,17 +27,6 @@ const loadUserEmail = () => {
 const logout = () => {
   authState.logout()
   router.push('/login')
-}
-
-interface ShippingInfo {
-  recipient: string
-  recipientPhone: string
-  address: string
-}
-
-interface UserData {
-  name: string
-  phone: string
 }
 
 const API_URL = import.meta.env.VITE_API_URL

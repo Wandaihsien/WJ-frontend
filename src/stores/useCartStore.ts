@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { debounce } from 'lodash'
 import axios from 'axios'
 import { Product, CartItem } from '../types/types'
 
@@ -11,7 +12,6 @@ export const useCartStore = defineStore('cart', () => {
 
   const loadCart = async () => {
     const token = getToken()
-    console.log(token)
     if (!token) {
       return
     }
@@ -49,6 +49,7 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   const removeFromCart = async (productId: number) => {
+    console.log(123)
     const token = getToken()
     try {
       await axios.delete(`/api/cart/${productId}`, {
@@ -62,10 +63,41 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
+  const updateCartQuantity = debounce(
+    async (productId: number, newQty: number) => {
+      const token = getToken()
+      try {
+        await axios.patch(
+          `/api/cart`,
+          {
+            productId: productId,
+            quantity: newQty,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        await loadCart()
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    200
+  )
+
   // 傳給登出頁清空購物車
   const clearCart = () => {
     cartItems.value = []
   }
+
+  const cartPriceTotal = computed(() => {
+    return cartItems.value.reduce((sum, item) => {
+      return sum + item.product.price * item.quantity
+    }, 0)
+  })
 
   return {
     loadCart,
@@ -73,5 +105,7 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     removeFromCart,
     clearCart,
+    updateCartQuantity,
+    cartPriceTotal,
   }
 })

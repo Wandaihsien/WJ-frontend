@@ -1,6 +1,69 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import { RouterLink } from 'vue-router'
+import { ShippingInfo } from '../types/types'
+import { useCartStore } from '../stores/useCartStore'
+import Swal from 'sweetalert2'
 import NavBar from '../components/NavBar.vue'
+
+const cartStore = useCartStore()
+
+const shippingInfo = ref<ShippingInfo>({
+  recipient: '',
+  recipientPhone: '',
+  address: '',
+})
+
+const fetchShippingInfo = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await axios.get('/api/shippingInfo', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    shippingInfo.value = res.data.shippingInfo
+  } catch (error) {
+    console.error('取得購物資訊失敗', error)
+  }
+}
+
+const submit = async () => {
+  try {
+    if (
+      !shippingInfo.value.recipient ||
+      !shippingInfo.value.address ||
+      !shippingInfo.value.recipientPhone
+    ) {
+      return Swal.fire({
+        icon: 'error',
+        title: '請填寫完整收件人資訊',
+        color: '#e1e1e1',
+        background: '#27272a',
+      })
+    }
+    const token = localStorage.getItem('token')
+    await axios.post('/api/shippingInfo', shippingInfo.value, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    Swal.fire({
+      icon: 'success',
+      title: '資料送出成功',
+      color: '#e1e1e1',
+      background: '#27272a',
+    })
+  } catch (error) {
+    console.error('送出用戶資訊失敗', error)
+  }
+}
+
+onMounted(() => {
+  cartStore.loadCart()
+  fetchShippingInfo()
+})
 </script>
 <template>
   <div class="w-full h-screen">
@@ -48,36 +111,40 @@ import NavBar from '../components/NavBar.vue'
           class="w-full flex items-center text-[15px] font-bold p-[15px] border-b-[1px]"
         >
           <h3>合計:NT$2460</h3>
-          <span>購物車 (X件)</span>
+          <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
         </div>
         <div
+          v-for="item in cartStore.cartItems"
+          :key="item.id"
           class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
         >
           <div class="relative grid grid-cols-[auto_1fr_auto]">
             <div>
               <img
-                src="/src/img/蜂巢戒指.jpg"
+                :src="item.product.image"
                 alt="商品圖片"
                 class="w-[60px] h-[60px] object-cover"
               />
             </div>
             <div class="mt-[5px] ml-[10px]">
-              <div class="text-[12px]">蜂巢戒指</div>
+              <div class="text-[12px]">{{ item.product.name }}</div>
               <div class="text-[10px] text-gray-400">F</div>
             </div>
             <!-- 單件價格 -->
             <div class="absolute top-[50px] right-0 flex items-end">
-              <span class="text-[12px]">NT$1680</span>
+              <span class="text-[12px]">NT${{ item.product.price }}</span>
             </div>
           </div>
           <div class="mt-[40px] flex justify-between">
             <!-- 數量 -->
             <div class="text-[11px] text-gray-700">
-              <span>數量:1</span>
+              <span>數量:{{ item.quantity }}</span>
             </div>
             <!-- 小計 -->
             <div class="flex items-end">
-              <span class="text-[12px]">NT$1680</span>
+              <span class="text-[12px]"
+                >NT${{ item.product.price * item.quantity }}</span
+              >
             </div>
           </div>
         </div>
@@ -90,7 +157,7 @@ import NavBar from '../components/NavBar.vue'
           class="w-full h-[94px] flex flex-col justify-center items-center text-[15px] font-bold p-[15px] border-b-[1px]"
         >
           <h3>合計:NT$2460</h3>
-          <span>購物車 (X件)</span>
+          <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
         </div>
         <div class="sm:grid grid-cols-[1.5fr_1fr_1fr_1fr] p-[15px] text-[11px]">
           <div>商品資料</div>
@@ -99,39 +166,43 @@ import NavBar from '../components/NavBar.vue'
           <div class="text-right">小計</div>
         </div>
         <div
+          v-for="item in cartStore.cartItems"
+          :key="item.id"
           class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
         >
           <div class="relative grid grid-cols-[auto_1fr_auto]">
             <div>
               <img
-                src="/src/img/蜂巢戒指.jpg"
+                :src="item.product.image"
                 alt="商品圖片"
                 class="w-[60px] h-[60px] object-cover"
               />
             </div>
             <div class="mt-[5px] ml-[10px]">
-              <div class="text-[12px]">蜂巢戒指</div>
+              <div class="text-[12px]">{{ item.product.name }}</div>
               <div class="text-[10px] text-gray-400">F</div>
             </div>
           </div>
           <!-- 單件價格 -->
           <div class="sm:grid">
-            <span class="text-[12px]">NT$1680</span>
+            <span class="text-[12px]">NT${{ item.product.price }}</span>
           </div>
           <!-- 數量 -->
           <div class="text-center sm:block">
-            <span class="text-[12px]">1</span>
+            <span class="text-[12px]">{{ item.quantity }}</span>
           </div>
           <!-- 小計 -->
           <div class="text-right sm:block">
-            <span class="text-[12px]">NT$1680</span>
+            <span class="text-[12px]"
+              >NT${{ item.product.price * item.quantity }}</span
+            >
           </div>
         </div>
       </section>
       <div class="p-[15px] flex flex-col gap-[20px]">
         <div class="flex justify-between text-[12px]">
           <span>小計:</span>
-          <span>NT$2560</span>
+          <span>NT${{ cartStore.cartPriceTotal }}</span>
         </div>
         <div class="flex justify-between text-[12px]">
           <span>運費:</span>
@@ -139,11 +210,10 @@ import NavBar from '../components/NavBar.vue'
         </div>
         <div class="w-full h-[1px] bg-gray-200"></div>
         <div class="flex justify-between text-[12px] font-bold">
-          <span>合計 (X 件):</span>
-          <span>NT$0</span>
+          <span>合計 :</span>
+          <span>NT${{ cartStore.cartPriceTotal }}</span>
         </div>
       </div>
-      <!-- <div class="w-full h-[50px] border-t-[1px]"></div> -->
     </div>
     <div
       class="mt-[20px] mx-[20px] flex flex-col gap-[20px] sm:grid grid-cols-2 sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
@@ -160,11 +230,16 @@ import NavBar from '../components/NavBar.vue'
           <p class="text-[11px]">
             已選擇的送貨方式: 國內 宅配( 送貨需要3-7日 )
           </p>
-          <form class="mt-[10px] flex flex-col gap-[20px]">
+          <form
+            id="shippingForm"
+            @submit.prevent="submit"
+            class="mt-[10px] flex flex-col gap-[20px]"
+          >
             <div class="flex flex-col text-[11px]">
-              <label for="guestName" class="text-[11px]">收件人名稱</label>
+              <label for=" recipient" class="text-[11px]">收件人名稱</label>
               <input
-                id="guestName"
+                v-model="shippingInfo.recipient"
+                id=" recipient"
                 type="text"
                 class="h-[34px] mt-[5px] pl-[10px] border-[1px] focus:outline-none"
               />
@@ -173,11 +248,10 @@ import NavBar from '../components/NavBar.vue'
               >
             </div>
             <div class="flex flex-col">
-              <label for="shippingAreaSelect" class="text-[11px]"
-                >收件人電話</label
-              >
+              <label for="recipientPhone" class="text-[11px]">收件人電話</label>
               <input
-                id="guestPhone"
+                v-model="shippingInfo.recipientPhone"
+                id="recipientPhone"
                 type="text"
                 placeholder="0912 345 678"
                 class="h-[34px] text-[11px] mt-[5px] pl-[10px] border-[1px] focus:outline-none"
@@ -189,6 +263,7 @@ import NavBar from '../components/NavBar.vue'
               <p class="text-[11px] mb-[10px]">送貨地點: 台灣</p>
               <label for="address" class="text-[11px]">地址</label>
               <input
+                v-model="shippingInfo.address"
                 id="address"
                 type="text"
                 placeholder="地址"
@@ -252,6 +327,8 @@ import NavBar from '../components/NavBar.vue'
       class="mt-[20px] mx-[20px] p-[20px] flex justify-center items-center flex-col border-[1px] sm:flex-row-reverse sm:justify-between sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
     >
       <button
+        type="submit"
+        form="shippingForm"
         class="w-full h-[34px] bg-green-500 text-white text-[12px] rounded-[5px] sm:max-w-[314px] md:max-w-[424px] lg:max-w-[524px]"
       >
         提交訂單

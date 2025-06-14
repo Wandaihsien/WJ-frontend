@@ -5,7 +5,7 @@ import Signup from '../views/Signup.vue'
 import User from '../views/User.vue'
 import Cart from '../views/Cart.vue'
 import CheckOut from '../views/CheckOut.vue'
-import OrderSuccess from '../views/orderSuccess.vue'
+import OrderSuccess from '../views/OrderSuccess.vue'
 import OrderFailed from '../views/OrderFailed.vue'
 
 const router = createRouter({
@@ -27,9 +27,10 @@ const router = createRouter({
       component: Signup,
     },
     {
-      path: '/user',
+      path: '/user/:user_id',
       name: 'User',
       component: User,
+      meta: { requiresAuth: true },
     },
     {
       path: '/cart',

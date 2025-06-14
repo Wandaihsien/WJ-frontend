@@ -1,10 +1,47 @@
 <script setup lang="ts">
+import { watch, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useCartStore } from '../stores/useCartStore'
+import router from '../router'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import Plus from '../components/svg/Plus.vue'
 import Minus from '../components/svg/Minus.vue'
 import Cross from '../components/svg/Cross.vue'
+
+const minus = (item: any) => {
+  if (item.quantity > 1) {
+    item.quantity--
+  }
+}
+const add = (item: any) => {
+  if (item.quantity < 20) {
+    item.quantity++
+  }
+}
+
+const cartStore = useCartStore()
+
+watch(
+  () =>
+    cartStore.cartItems.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    })),
+  (newItems, oldItems) => {
+    if (oldItems) {
+      newItems.forEach((newItem, index) => {
+        const oldItem = oldItems[index]
+        if (oldItem && newItem.quantity !== oldItem.quantity) {
+          cartStore.updateCartQuantity(newItem.id, newItem.quantity)
+        }
+      })
+    }
+  }
+)
+onMounted(() => {
+  cartStore.loadCart()
+})
 </script>
 <template>
   <div class="w-full h-screen">
@@ -42,57 +79,81 @@ import Cross from '../components/svg/Cross.vue'
         <span class="text-black text-[11px]">訂單確認</span>
       </div>
     </div>
+    <div
+      v-if="cartStore.cartItems.length == 0"
+      class="h-[50%] mt-[20px] mx-[20px] flex flex-col justify-center items-center"
+    >
+      <h5 class="text-[18px] font-bold">你的購物車是空的</h5>
+      <p class="text-[12px]">記得加入商品到你的購物車</p>
+      <RouterLink to="/" class="mt-[20px]">
+        <button
+          class="w-[180px] h-[34px] bg-black text-white text-center text-[12px] sm:w-[364px]"
+        >
+          繼續購物
+        </button>
+      </RouterLink>
+    </div>
     <!-- 手機版購物車 -->
-    <section class="mt-[20px] mx-[20px] border-[1px] sm:hidden">
+    <section
+      v-if="cartStore.cartItems.length > 0"
+      class="mt-[20px] mx-[20px] border-[1px] sm:hidden"
+    >
       <div
         class="w-full flex items-center bg-gray-100 text-[14px] p-[15px] border-b-[1px]"
       >
         <h3>購物車 (</h3>
-        <span>X件)</span>
+        <span>{{ cartStore.cartItems.length }}件)</span>
       </div>
       <div
+        v-for="item in cartStore.cartItems"
+        :key="item.id"
         class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
       >
         <div class="relative grid grid-cols-[auto_1fr_auto]">
           <div>
             <img
-              src="/src/img/蜂巢戒指.jpg"
+              :src="item.product.image"
               alt="商品圖片"
               class="w-[60px] h-[60px] object-cover"
             />
           </div>
           <div class="mt-[5px] ml-[10px]">
-            <div class="text-[12px]">蜂巢戒指</div>
+            <div class="text-[12px]">{{ item.product.name }}</div>
             <div class="text-[10px] text-gray-400">F</div>
           </div>
           <!-- 單件價格 -->
           <div class="absolute top-[50px] right-0 flex items-end">
-            <span class="text-[12px]">NT$1680</span>
+            <span class="text-[12px]">NT${{ item.product.price }}</span>
           </div>
         </div>
         <div class="mt-[20px] flex justify-between">
           <!-- 數量 -->
-          <form class="w-[160px] h-[34px] border-[1px] flex">
+          <div class="w-[160px] h-[34px] border-[1px] flex">
             <button
+              @click="minus(item)"
               class="w-[37px] border-r-[1px] flex justify-center items-center"
             >
               <Minus stroke-width="3" class="size-4" />
             </button>
             <input
+              v-model="item.quantity"
               type="number"
               class="w-[88px] focus:outline-none text-[12px] text-center"
-              value="1"
+              max="100"
               min="1"
             />
             <button
+              @click="add(item)"
               class="w-[37px] border-l-[1px] flex justify-center items-center"
             >
               <Plus stroke-width="3" class="size-4" />
             </button>
-          </form>
+          </div>
           <!-- 小計 -->
           <div class="flex items-end">
-            <span class="text-[12px]">NT$1680</span>
+            <span class="text-[12px]"
+              >NT${{ item.product.price * item.quantity }}</span
+            >
           </div>
         </div>
         <div class="absolute top-[15px] right-[15px]">
@@ -102,13 +163,14 @@ import Cross from '../components/svg/Cross.vue'
     </section>
     <!-- 桌機版購物車 -->
     <section
+      v-if="cartStore.cartItems.length > 0"
       class="hidden mt-[20px] mx-[20px] border-[1px] sm:block sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
     >
       <div
         class="w-full flex items-center bg-gray-100 text-[14px] p-[15px] border-b-[1px]"
       >
         <h3>購物車 (</h3>
-        <span>X件)</span>
+        <span>{{ cartStore.cartItems.length }}件)</span>
       </div>
       <div class="sm:grid grid-cols-[1.5fr_1fr_1fr_1fr] p-[15px] text-[11px]">
         <div>商品資料</div>
@@ -117,58 +179,69 @@ import Cross from '../components/svg/Cross.vue'
         <div class="text-center">小計</div>
       </div>
       <div
+        v-for="item in cartStore.cartItems"
+        :key="item.id"
         class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
       >
         <div class="relative grid grid-cols-[auto_1fr_auto]">
           <div>
             <img
-              src="/src/img/蜂巢戒指.jpg"
+              :src="item.product.image"
               alt="商品圖片"
               class="w-[60px] h-[60px] object-cover"
             />
           </div>
           <div class="mt-[5px] ml-[10px]">
-            <div class="text-[12px]">蜂巢戒指</div>
+            <div class="text-[12px]">{{ item.product.name }}</div>
             <div class="text-[10px] text-gray-400">F</div>
           </div>
         </div>
         <!-- 單件價格 -->
         <div class="sm:grid">
-          <span class="text-[12px]">NT$1680</span>
+          <span class="text-[12px]">NT${{ item.product.price }}</span>
         </div>
         <!-- 數量 -->
-        <form class="w-full sm:flex justify-center items-center">
+        <div class="w-full sm:flex justify-center items-center">
           <div
             class="h-[34px] max-w-[164px] border-[1px] flex justify-center items-center"
           >
             <button
+              @click="minus(item)"
               class="w-[37px] border-r-[1px] flex justify-center items-center"
             >
               <Minus stroke-width="3" class="size-3" />
             </button>
             <input
+              v-model="item.quantity"
               type="number"
-              class="max-w-[88px] focus:outline-none text-[12px] text-center sm:max-w-[48px] md:max-w-[85px]"
-              value="1"
+              class="focus:outline-none text-[12px] text-center sm:w-[48px] md:w-[85px]"
               min="1"
+              max="100"
             />
             <button
+              @click="add(item)"
               class="w-[37px] border-l-[1px] flex justify-center items-center"
             >
               <Plus stroke-width="3" class="size-3" />
             </button>
           </div>
-        </form>
+        </div>
         <!-- 小計 -->
         <div class="text-center sm:block">
-          <span class="text-[12px]">NT$1680</span>
+          <span class="text-[12px]"
+            >NT${{ item.product.price * item.quantity }}</span
+          >
         </div>
-        <div class="absolute top-[15px] right-[15px]">
+        <div
+          @click="cartStore.removeFromCart(item.product.id)"
+          class="absolute top-[15px] right-[15px] cursor-pointer"
+        >
           <Cross stroke-width="4" class="size-3" />
         </div>
       </div>
     </section>
     <div
+      v-if="cartStore.cartItems.length > 0"
       class="mt-[20px] mx-[20px] flex flex-col gap-[20px] sm:grid grid-cols-5 sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
     >
       <!-- 選擇送貨及付款方式 -->
@@ -237,10 +310,11 @@ import Cross from '../components/svg/Cross.vue'
           </div>
           <div class="w-full h-[1px] bg-gray-200"></div>
           <div class="flex justify-between text-[11px] font-bold">
-            <span>合計 (X 件):</span>
-            <span>NT$0</span>
+            <span>合計 :</span>
+            <span> NT${{ cartStore.cartPriceTotal }} </span>
           </div>
           <button
+            @click="router.push('/checkout')"
             class="w-full h-[45px] mt-[30px] bg-green-500 text-white rounded-[5px]"
           >
             前往結帳

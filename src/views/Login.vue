@@ -21,8 +21,9 @@ const submit = async () => {
     })
 
     const token = response.data.token
+    const userId = response.data.user.id
     if (token) {
-      authState.setUser(email.value, token)
+      authState.setUser(email.value, token, userId)
       router.push('/')
     } else {
       Swal.fire({
