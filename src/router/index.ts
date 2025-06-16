@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AllProducts from '../views/AllProducts.vue'
 import Login from '../views/Login.vue'
-import Signup from '../views/Signup.vue'
 import User from '../views/User.vue'
+import SignUp from '../views/SignUp.vue'
 import Cart from '../views/Cart.vue'
 import CheckOut from '../views/CheckOut.vue'
 import OrderSuccess from '../views/OrderSuccess.vue'
@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/signup',
       name: 'Signup',
-      component: Signup,
+      component: SignUp,
     },
     {
       path: '/user/:user_id',
