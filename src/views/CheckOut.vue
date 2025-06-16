@@ -216,10 +216,10 @@ onMounted(() => {
       </div>
     </div>
     <div
-      class="mt-[20px] mx-[20px] flex flex-col gap-[20px] sm:grid grid-cols-2 sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
+      class="mt-[20px] mx-[20px] flex justify-end sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
     >
       <!-- 送貨資料 -->
-      <section class="w-full border-[1px] col-span-1">
+      <section class="w-full border-[1px] sm:max-w-[50%] lg:max-w-[40%]">
         <div
           class="w-full flex justify-between items-center bg-gray-100 text-[14px] p-[15px] border-b-[1px]"
         >
@@ -273,8 +273,8 @@ onMounted(() => {
           </form>
         </div>
       </section>
-      <section class="w-full border-[1px] col-span-1">
-        <!-- 付款資料 -->
+      <!-- <section class="w-full border-[1px] col-span-1">
+        付款資料
         <div>
           <div
             class="w-full flex items-center bg-gray-100 text-[14px] p-[15px] border-b-[1px]"
@@ -321,7 +321,7 @@ onMounted(() => {
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
     </div>
     <div
       class="mt-[20px] mx-[20px] p-[20px] flex justify-center items-center flex-col border-[1px] sm:flex-row-reverse sm:justify-between sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
