@@ -81,10 +81,10 @@ onBeforeUnmount(() => {
     <Transition name="slide-left">
       <div
         v-if="isMenuOpen"
-        class="w-[30vw] h-screen z-[1000] bg-black absolute will-change-transform"
+        class="w-[300px] h-screen z-[1000] bg-black absolute will-change-transform sm:w-[30vw]"
       >
         <ul
-          class="text-white text-[2vw] flex flex-col items-center mt-[10px] gap-[20px]"
+          class="text-white text-[18px] flex flex-col items-center mt-[10px] gap-[20px] sm:text-[2vw]"
         >
           <li>
             <a href="">首頁</a>
@@ -94,12 +94,12 @@ onBeforeUnmount(() => {
           </li>
         </ul>
         <div
-          class="relative text-white text-[3vw] text-center mt-[20px] font-black before:content-[''] before:block before:w-[40%] before:h-px before:bg-white before:mx-auto before:mt-[10px] before:mb-[10px]"
+          class="relative text-white text-[20px] text-center mt-[20px] font-black before:content-[''] before:block before:w-[40%] before:h-px before:bg-white before:mx-auto before:mt-[10px] before:mb-[10px] sm:text-[3vw]"
         >
           分類
         </div>
         <ul
-          class="text-white text-[2vw] flex flex-col items-center mt-[10px] gap-[20px]"
+          class="text-white text-[18px] flex flex-col items-center mt-[10px] gap-[20px] sm:text-[2vw]"
         >
           <li>
             <a href="">手鍊</a>
@@ -136,14 +136,14 @@ onBeforeUnmount(() => {
     <Transition :name="slideChanged">
       <div
         v-if="cartStateStore.isCartOpen"
-        class="w-[35vw] min-w-[200px] h-screen bg-white absolute overflow-y-auto z-[1000] will-change-transform lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
+        class="w-[300px] h-screen bg-white absolute overflow-y-auto z-[1000] will-change-transform sm:w-[35vw] lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
       >
         <div
           v-for="item in cartStore.cartItems"
           :key="item.id"
           class="w-full p-[15px] flex gap-[15px] relative after:content-[''] after:block after:w-full after:h-[1px] after:bg-gray-200 after:absolute after:bottom-0 after:left-0"
         >
-          <div class="w-[20%] min-w-[33px] max-w-[70px] aspect-square">
+          <div class="w-[30%] min-w-[33px] max-w-[70px] aspect-square">
             <img
               :src="item.product.image"
               alt="商品圖片"
@@ -152,12 +152,12 @@ onBeforeUnmount(() => {
           </div>
           <div class="w-[60%] min-w-[115px] flex flex-col justify-between">
             <div
-              class="text-[12px] text-gray-400 sm:text-[1.3vw] lg:text-[0.8vw]"
+              class="text-[16px] text-gray-400 sm:text-[1.3vw] lg:text-[0.8vw]"
             >
               {{ item.product.name }}
             </div>
             <div
-              class="text-[10px] flex gap-[5px] sm:text-[1.5vw] lg:text-[0.8vw]"
+              class="text-[16px] flex gap-[5px] sm:text-[1.5vw] lg:text-[0.8vw]"
             >
               {{ item.quantity }}
               <span>x</span>
@@ -167,7 +167,7 @@ onBeforeUnmount(() => {
           <div class="w-[10%] absolute right-[10px] bottom-[20px]">
             <TrashCan
               @click="cartStore.removeFromCart(item.product.id)"
-              class="size-[10px] sm:size-[1.5vw] lg:size-[1vw] cursor-pointer"
+              class="size-[16px] sm:size-[1.5vw] lg:size-[1vw] cursor-pointer"
             />
           </div>
         </div>
@@ -184,7 +184,7 @@ onBeforeUnmount(() => {
           >
             <button
               @click="handleCheckout"
-              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-black text-white text-[12px] font-bold sm:text-[1.5vw] lg:w-full lg:text-[1vw]"
+              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-black text-white text-[14px] font-bold sm:text-[1.5vw] lg:w-full lg:text-[1vw]"
             >
               訂單結帳
             </button>
