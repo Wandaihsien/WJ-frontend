@@ -3,7 +3,7 @@ import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useCartStore } from '../stores/useCartStore'
 import { useCartStateStore } from '../stores/cartStateStore'
-import { checkAuthState } from '../stores/authState'
+import { useAuthStore } from '../stores/authState'
 import router from '../router'
 import TrashCan from './svg/TrashCan.vue'
 import TripleLine from './svg/TripleLine.vue'
@@ -42,11 +42,11 @@ watch(
   }
 )
 
-const authState = checkAuthState()
+const authStore = useAuthStore()
 const userId = localStorage.getItem('userId')
 
 const handleUserClick = () => {
-  if (authState.isLoggedIn) {
+  if (authStore.isLoggedIn) {
     router.push(`/user/${userId}`)
   } else {
     router.push('/login')
@@ -115,13 +115,13 @@ onBeforeUnmount(() => {
           </li>
         </ul>
         <div
-          v-if="!authState.isLoggedIn"
+          v-if="!authStore.isLoggedIn"
           class="relative text-white text-[3vw] text-center font-black mt-[20px] before:content-[''] before:block before:w-[40%] before:h-px before:bg-white before:mx-auto before:mt-[10px] before:mb-[20px]"
         >
           帳戶
         </div>
         <ul
-          v-if="!authState.isLoggedIn"
+          v-if="!authStore.isLoggedIn"
           class="text-white text-[2vw] flex flex-col items-center mt-[10px] gap-[20px]"
         >
           <li>
@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
     <Transition :name="slideChanged">
       <div
         v-if="cartStateStore.isCartOpen"
-        class="w-[30vw] h-screen bg-white absolute overflow-y-auto z-[1000] will-change-transform lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
+        class="w-[35vw] min-w-[200px] h-screen bg-white absolute overflow-y-auto z-[1000] will-change-transform lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
       >
         <div
           v-for="item in cartStore.cartItems"
@@ -151,10 +151,14 @@ onBeforeUnmount(() => {
             />
           </div>
           <div class="w-[60%] min-w-[115px] flex flex-col justify-between">
-            <div class="text-[1.3vw] text-gray-400 lg:text-[0.8vw]">
+            <div
+              class="text-[12px] text-gray-400 sm:text-[1.3vw] lg:text-[0.8vw]"
+            >
               {{ item.product.name }}
             </div>
-            <div class="text-[1.5vw] flex gap-[5px] lg:text-[0.8vw]">
+            <div
+              class="text-[10px] flex gap-[5px] sm:text-[1.5vw] lg:text-[0.8vw]"
+            >
               {{ item.quantity }}
               <span>x</span>
               <span>NT${{ item.product.price }}</span>
@@ -163,7 +167,7 @@ onBeforeUnmount(() => {
           <div class="w-[10%] absolute right-[10px] bottom-[20px]">
             <TrashCan
               @click="cartStore.removeFromCart(item.product.id)"
-              class="size-[1.5vw] lg:size-[1vw] cursor-pointer"
+              class="size-[10px] sm:size-[1.5vw] lg:size-[1vw] cursor-pointer"
             />
           </div>
         </div>
@@ -180,7 +184,7 @@ onBeforeUnmount(() => {
           >
             <button
               @click="handleCheckout"
-              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-black text-white text-[1.5vw] font-bold lg:w-full lg:text-[1vw]"
+              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-black text-white text-[12px] font-bold sm:text-[1.5vw] lg:w-full lg:text-[1vw]"
             >
               訂單結帳
             </button>

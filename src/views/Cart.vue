@@ -156,7 +156,10 @@ onMounted(() => {
             >
           </div>
         </div>
-        <div class="absolute top-[15px] right-[15px]">
+        <div
+          @click="cartStore.removeFromCart(item.product.id)"
+          class="absolute top-[15px] right-[15px]"
+        >
           <Cross stroke-width="4" class="size-3" />
         </div>
       </div>

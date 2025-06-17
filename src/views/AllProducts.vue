@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useCartStateStore } from '../stores/cartStateStore'
-import { checkAuthState } from '../stores/authState'
+import { useAuthStore } from '../stores/authState'
 import { Product } from '../types/types'
+import router from '../router'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import NavBar from '../components/NavBar.vue'
@@ -11,7 +12,7 @@ import Cart from '../components/svg/Cart.vue'
 import ProductInfo from '../components/ProductInfo.vue'
 
 const cartStateStore = useCartStateStore()
-const authState = checkAuthState()
+const authStore = useAuthStore()
 
 const showProductInfo = ref(false)
 const selectedProduct = ref<Product | null>(null)
@@ -28,7 +29,7 @@ const fetchProducts = async () => {
 }
 
 const handleClickProduct = (product: Product) => {
-  if (authState.isLoggedIn) {
+  if (authStore.isLoggedIn) {
     selectedProduct.value = product
     showProductInfo.value = true
   } else {
@@ -38,6 +39,7 @@ const handleClickProduct = (product: Product) => {
       color: '#e1e1e1',
       background: '#27272a',
     })
+    router.push('/login')
   }
 }
 
@@ -68,10 +70,10 @@ onMounted(() => {
             class="md:flex flex-col mt-[30px] pl-[50px] font-black text-[14px] gap-[10px]"
           >
             <li>所有商品</li>
-            <li>手鍊</li>
+            <!-- <li>手鍊</li>
             <li>項鍊</li>
             <li>戒指</li>
-            <li>耳環</li>
+            <li>耳環</li> -->
           </ul>
         </div>
         <div class="mx-[10px] my-[40px] md:col-span-3 lg:col-span-5">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { checkAuthState } from '../stores/authState'
+import { useAuthStore } from '../stores/authState'
 import { ShippingInfo, UserData } from '../types/types'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -12,7 +12,7 @@ import Footer from '../components/Footer.vue'
 const tabs = ['個人資訊', '訂單']
 const activeTab = ref('個人資訊')
 
-const authState = checkAuthState()
+const authStore = useAuthStore()
 const email = ref('')
 
 const loadUserEmail = () => {
@@ -25,7 +25,7 @@ const loadUserEmail = () => {
 }
 
 const logout = () => {
-  authState.logout()
+  authStore.logout()
   router.push('/login')
 }
 
@@ -44,7 +44,7 @@ const userData = ref<UserData>({
 const fetchShippingInfo = async () => {
   try {
     const token = localStorage.getItem('token')
-    const res = await axios.get(`${API_URL}/shippingInfo`, {
+    const res = await axios.get(`${API_URL}/api/shippingInfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

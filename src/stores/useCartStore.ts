@@ -50,7 +50,6 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   const removeFromCart = async (productId: number) => {
-    console.log(123)
     const token = getToken()
     try {
       await axios.delete(`${API_URL}/api/cart/${productId}`, {

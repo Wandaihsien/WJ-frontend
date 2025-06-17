@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useCartStore } from '../stores/useCartStore'
 
-export const checkAuthState = defineStore('authStore', () => {
+export const useAuthStore = defineStore('authStore', () => {
   const cartStore = useCartStore()
   const token = ref<string | null>(localStorage.getItem('token'))
   const userEmail = ref<string | null>(null)

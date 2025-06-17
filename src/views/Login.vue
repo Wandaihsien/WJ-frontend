@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { checkAuthState } from '../stores/authState'
+import { useAuthStore } from '../stores/authState'
 import axios from 'axios'
 import router from '../router'
 import Swal from 'sweetalert2'
@@ -10,7 +10,7 @@ import Footer from '../components/Footer.vue'
 
 const email = ref('')
 const password = ref('')
-const authState = checkAuthState()
+const authState = useAuthStore()
 const API_URL = import.meta.env.VITE_API_URL
 
 const submit = async () => {
