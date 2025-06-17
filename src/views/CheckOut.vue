@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import NavBar from '../components/NavBar.vue'
 
 const cartStore = useCartStore()
+const API_URL = import.meta.env.VITE_API_URL
 
 const shippingInfo = ref<ShippingInfo>({
   recipient: '',
@@ -18,7 +19,7 @@ const shippingInfo = ref<ShippingInfo>({
 const fetchShippingInfo = async () => {
   try {
     const token = localStorage.getItem('token')
-    const res = await axios.get('/api/shippingInfo', {
+    const res = await axios.get(`${API_URL}/api/shippingInfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -44,7 +45,7 @@ const submit = async () => {
       })
     }
     const token = localStorage.getItem('token')
-    await axios.post('/api/shippingInfo', shippingInfo.value, {
+    await axios.post(`${API_URL}/api/shippingInfo`, shippingInfo.value, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
