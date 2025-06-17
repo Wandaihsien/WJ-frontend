@@ -9,7 +9,7 @@ import OrderSuccess from '../views/OrderSuccess.vue'
 import OrderFailed from '../views/OrderFailed.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_API_URL),
+  history: createWebHistory('/'),
   routes: [
     {
       path: '/',
