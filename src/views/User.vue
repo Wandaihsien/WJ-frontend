@@ -44,7 +44,7 @@ const userData = ref<UserData>({
 const fetchShippingInfo = async () => {
   try {
     const token = localStorage.getItem('token')
-    const res = await axios.get(`${API_URL}/api/shippingInfo`, {
+    const res = await axios.get(`${API_URL}/shippingInfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -4,6 +4,7 @@ import { debounce } from 'lodash'
 import axios from 'axios'
 import { Product, CartItem } from '../types/types'
 
+const API_URL = import.meta.env.VITE_API_URL
 export const useCartStore = defineStore('cart', () => {
   const cartItems = ref<CartItem[]>([])
   const getToken = () => {
@@ -16,7 +17,7 @@ export const useCartStore = defineStore('cart', () => {
       return
     }
     try {
-      const res = await axios.get('/api/cart', {
+      const res = await axios.get(`${API_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -31,7 +32,7 @@ export const useCartStore = defineStore('cart', () => {
     const token = getToken()
     try {
       await axios.post(
-        '/api/cart',
+        `${API_URL}/api/cart`,
         {
           productId: product.id,
           quantity,
@@ -52,7 +53,7 @@ export const useCartStore = defineStore('cart', () => {
     console.log(123)
     const token = getToken()
     try {
-      await axios.delete(`/api/cart/${productId}`, {
+      await axios.delete(`${API_URL}/api/cart/${productId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -68,7 +69,7 @@ export const useCartStore = defineStore('cart', () => {
       const token = getToken()
       try {
         await axios.patch(
-          `/api/cart`,
+          `${API_URL}/api/cart`,
           {
             productId: productId,
             quantity: newQty,
