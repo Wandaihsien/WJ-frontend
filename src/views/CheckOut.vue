@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { RouterLink } from 'vue-router'
+import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { ShippingInfo } from '../types/types'
 import { useCartStore } from '../stores/useCartStore'
 import Swal from 'sweetalert2'
@@ -45,17 +46,54 @@ const submit = async () => {
       })
     }
     const token = localStorage.getItem('token')
+    if (!token) {
+      console.error('Token not found')
+      return
+    }
+    const decoded = jwtDecode(token) as any
+    const email = decoded.email
+
     await axios.post(`${API_URL}/api/shippingInfo`, shippingInfo.value, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    Swal.fire({
-      icon: 'success',
-      title: '資料送出成功',
-      color: '#e1e1e1',
-      background: '#27272a',
-    })
+    const orderRes = await axios.post(
+      `${API_URL}/api/order`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    const order = orderRes.data
+    const payRes = await axios.post(
+      `${API_URL}/api/payment`,
+      {
+        total: order.total,
+        email: email,
+        orderNo: order.tradeNo,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    const paymentData = payRes.data
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = paymentData.PayGateWay
+
+    for (const key in paymentData) {
+      const input = document.createElement('input')
+      input.type = ''
+      input.name = key
+      input.value = paymentData[key]
+      form.appendChild(input)
+    }
+
+    document.body.appendChild(form)
+    form.submit()
   } catch (error) {
     console.error('送出用戶資訊失敗', error)
   }
