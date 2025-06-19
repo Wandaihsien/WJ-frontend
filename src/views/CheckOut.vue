@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { RouterLink } from 'vue-router'
-import { jwtDecode, JwtPayload } from 'jwt-decode'
 import { ShippingInfo } from '../types/types'
 import { useCartStore } from '../stores/useCartStore'
 import Swal from 'sweetalert2'
@@ -46,12 +45,11 @@ const submit = async () => {
       })
     }
     const token = localStorage.getItem('token')
+
     if (!token) {
       console.error('Token not found')
       return
     }
-    const decoded = jwtDecode(token) as any
-    const email = decoded.email
 
     await axios.post(`${API_URL}/api/shippingInfo`, shippingInfo.value, {
       headers: {
@@ -67,6 +65,7 @@ const submit = async () => {
         },
       }
     )
+    const email = localStorage.getItem('email')
     const order = orderRes.data
     const payRes = await axios.post(
       `${API_URL}/api/payment`,
@@ -86,7 +85,7 @@ const submit = async () => {
 
     for (const key in paymentData) {
       const input = document.createElement('input')
-      input.type = ''
+      input.type = 'hidden'
       input.name = key
       input.value = paymentData[key]
       form.appendChild(input)
