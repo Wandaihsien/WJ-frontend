@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import NavBar from '../components/NavBar.vue'
+
+const route = useRoute()
+const orderNo = route.query.orderNo
 </script>
 <template>
   <div class="w-full h-screen">
@@ -45,7 +48,7 @@ import NavBar from '../components/NavBar.vue'
           訂單建立成功
         </div>
         <p class="text-sm text-gray-600 mb-1">
-          訂單編號：<span class="font-medium">20250611001</span>
+          訂單編號：<span class="font-medium">{{ orderNo }}</span>
         </p>
         <p class="text-sm text-gray-600 mb-6">
           感謝您的訂購，我們將盡快為您出貨。
