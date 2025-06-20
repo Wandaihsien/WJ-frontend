@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../stores/authState'
-import { ShippingInfo, UserData } from '../types/types'
+import { ShippingInfo, UserData, Order } from '../types/types'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import router from '../router'
@@ -41,6 +41,21 @@ const userData = ref<UserData>({
   phone: '',
 })
 
+const orders = ref<Order[]>([])
+const fetchOrders = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    const res = await axios.get(`${API_URL}/api/order`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    orders.value = res.data
+    console.log(res.data)
+  } catch (error) {
+    console.error('取得訂單資訊失敗', error)
+  }
+}
 const fetchShippingInfo = async () => {
   try {
     const token = localStorage.getItem('token')
@@ -104,6 +119,7 @@ const cancelButton = () => {
 
 onMounted(() => {
   loadUserEmail()
+  fetchOrders()
   fetchShippingInfo()
   fetchUserData()
 })
@@ -277,23 +293,23 @@ onMounted(() => {
                 <th class="border px-4 py-2 text-left">訂單狀態</th>
               </tr>
             </thead>
-            <tbody class="text-[12px]">
+            <tbody v-for="order in orders" :key="order.id" class="text-[12px]">
               <tr class="block sm:table-row border sm:border-0 mb-4 md:mb-0">
                 <td class="block sm:table-cell border px-4 py-2">
                   <span class="sm:hidden font-semibold">訂單號碼：</span>
-                  20250122170216520
+                  {{ order.tradeNo }}
                 </td>
                 <td class="block sm:table-cell border px-4 py-2">
                   <span class="sm:hidden font-semibold">訂單日期：</span>
-                  2025-01-23
+                  {{ order.date.slice(0, 10) }}
                 </td>
                 <td class="block sm:table-cell border px-4 py-2">
                   <span class="sm:hidden font-semibold">合計：</span>
-                  NT$1,245
+                  NT${{ order.total }}
                 </td>
                 <td class="block sm:table-cell border px-4 py-2">
                   <span class="sm:hidden font-semibold">訂單狀態：</span>
-                  未送達
+                  已付款
                 </td>
               </tr>
             </tbody>

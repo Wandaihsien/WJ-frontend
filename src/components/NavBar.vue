@@ -43,11 +43,10 @@ watch(
 )
 
 const authStore = useAuthStore()
-const userId = localStorage.getItem('userId')
 
 const handleUserClick = () => {
   if (authStore.isLoggedIn) {
-    router.push(`/user/${userId}`)
+    router.push('/user')
   } else {
     router.push('/login')
   }

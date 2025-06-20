@@ -148,7 +148,7 @@ onMounted(() => {
         <div
           class="w-full flex items-center text-[15px] font-bold p-[15px] border-b-[1px]"
         >
-          <h3>合計:NT$2460</h3>
+          <h3>合計:NT${{ cartStore.cartPriceTotal }}</h3>
           <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
         </div>
         <div
@@ -194,7 +194,7 @@ onMounted(() => {
         <div
           class="w-full h-[94px] flex flex-col justify-center items-center text-[15px] font-bold p-[15px] border-b-[1px]"
         >
-          <h3>合計:NT$2460</h3>
+          <h3>合計:NT${{ cartStore.cartPriceTotal }}</h3>
           <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
         </div>
         <div class="sm:grid grid-cols-[1.5fr_1fr_1fr_1fr] p-[15px] text-[11px]">

@@ -27,7 +27,7 @@ const router = createRouter({
       component: SignUp,
     },
     {
-      path: '/user/:user_id',
+      path: '/user',
       name: 'User',
       component: User,
       meta: { requiresAuth: true },

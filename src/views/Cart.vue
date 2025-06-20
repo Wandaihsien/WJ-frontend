@@ -305,7 +305,7 @@ onMounted(() => {
         <div class="p-[15px] flex flex-col gap-[20px]">
           <div class="flex justify-between text-[11px]">
             <span>小計:</span>
-            <span>NT$2560</span>
+            <span>NT${{ cartStore.cartPriceTotal }}</span>
           </div>
           <div class="flex justify-between text-[11px]">
             <span>運費:</span>

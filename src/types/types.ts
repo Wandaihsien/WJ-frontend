@@ -23,3 +23,11 @@ export interface UserData {
   name: string
   phone: string
 }
+
+export interface Order {
+  id: number
+  tradeNo: string
+  date: string
+  total: string
+  status: string
+}
