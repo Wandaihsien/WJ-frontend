@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import NavBar from '../components/NavBar.vue'
 </script>
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full h-screen min-h-[300px]">
     <NavBar />
     <!-- 進度條 -->
     <div class="flex my-[40px] mx-[60px] sm:max-w-[720px] sm:mx-auto">

@@ -82,7 +82,6 @@ const highToLowPrice = () => {
 onMounted(() => {
   fetchProducts()
   window.addEventListener('resize', handleResize)
-  console.log(products)
 })
 onUnmounted(() => {
   handleResize()
@@ -112,10 +111,6 @@ onUnmounted(() => {
             class="md:flex flex-col mt-[30px] pl-[50px] font-black text-[14px] gap-[10px]"
           >
             <li>所有商品</li>
-            <!-- <li>手鍊</li>
-            <li>項鍊</li>
-            <li>戒指</li>
-            <li>耳環</li> -->
           </ul>
         </div>
         <div class="mx-[10px] my-[40px] md:col-span-3 lg:col-span-5">

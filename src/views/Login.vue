@@ -75,7 +75,7 @@ const submit = async () => {
             v-model="password"
             id="password"
             type="password"
-            placeholder="密碼(至少8個字元)"
+            placeholder="(至少6個字元)"
             required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />

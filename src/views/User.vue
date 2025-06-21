@@ -51,7 +51,6 @@ const fetchOrders = async () => {
       },
     })
     orders.value = res.data
-    console.log(res.data)
   } catch (error) {
     console.error('取得訂單資訊失敗', error)
   }
@@ -135,7 +134,7 @@ onMounted(() => {
         <button @click="logout" class="underline text-[13px]">登出</button>
       </div>
       <div
-        class="sm:border sm:max-w-[718px] sm:mx-auto md:max-w-[938px] lg:max-w-[1108px]"
+        class="min-h-[350px] sm:border sm:max-w-[718px] sm:mx-auto md:max-w-[938px] lg:max-w-[1108px]"
       >
         <div
           class="w-full h-[56px] relative flex justify-center text-[12px] text-gray-500 :after:content-[''] after:w-full after:h-[1px] after:bg-gray-300 after:absolute after:left-0 after:bottom-0 sm:after:w-0"
@@ -285,7 +284,10 @@ onMounted(() => {
             v-if="activeTab === '訂單'"
             class="w-full my-[50px] border-collapse table-auto text-sm"
           >
-            <thead class="hidden sm:table-header-group">
+            <thead
+              v-if="orders.length > 0"
+              class="hidden sm:table-header-group"
+            >
               <tr>
                 <th class="border px-4 py-2 text-left">訂單號碼</th>
                 <th class="border px-4 py-2 text-left">訂單日期</th>
@@ -313,6 +315,12 @@ onMounted(() => {
                 </td>
               </tr>
             </tbody>
+            <div
+              v-if="orders.length === 0"
+              class="mt-[60px] flex justify-center items-center text-center text-[16px] font-bold"
+            >
+              目前沒有任何訂單
+            </div>
           </table>
         </div>
       </div>

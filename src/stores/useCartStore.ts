@@ -81,7 +81,7 @@ export const useCartStore = defineStore('cart', () => {
         )
         await loadCart()
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     },
 

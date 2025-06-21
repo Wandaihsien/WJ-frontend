@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
             <RouterLink to="/" class="cursor-pointer">所有商品</RouterLink>
           </li>
         </ul>
-        <div
+        <!-- <div
           class="relative text-white text-[20px] text-center mt-[20px] font-black before:content-[''] before:block before:w-[40%] before:h-px before:bg-white before:mx-auto before:mt-[10px] before:mb-[10px] sm:text-[3vw]"
         >
           分類
@@ -112,7 +112,7 @@ onBeforeUnmount(() => {
           <li>
             <a href="">耳環</a>
           </li>
-        </ul>
+        </ul> -->
         <div
           v-if="!authStore.isLoggedIn"
           class="relative text-white text-[3vw] text-center font-black mt-[20px] before:content-[''] before:block before:w-[40%] before:h-px before:bg-white before:mx-auto before:mt-[10px] before:mb-[20px]"
@@ -135,7 +135,7 @@ onBeforeUnmount(() => {
     <Transition :name="slideChanged">
       <div
         v-if="cartStateStore.isCartOpen"
-        class="w-[300px] h-screen bg-white absolute overflow-y-auto z-[1000] will-change-transform sm:w-[35vw] lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
+        class="w-[300px] h-screen bg-white absolute overflow-y-auto z-[1000] sm:w-[35vw] lg:right-[5vw] lg:top-[18vh] lg:max-w-[300px] lg:h-auto lg:min-h-[136px] lg:max-h-[80vh]"
       >
         <div
           v-for="item in cartStore.cartItems"
@@ -174,7 +174,9 @@ onBeforeUnmount(() => {
           v-if="cartStore.cartItems.length === 0"
           class="w-full h-screen flex justify-center items-center lg:h-[135px]"
         >
-          <span class="text-[1.5vw] lg:text-[12px]">購物車是空的</span>
+          <span class="text-[14px] sm:text-[1.5vw] lg:text-[12px]"
+            >購物車是空的</span
+          >
         </div>
         <RouterLink to="/cart">
           <div

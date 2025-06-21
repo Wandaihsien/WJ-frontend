@@ -17,7 +17,6 @@ import { useAuthStore } from '../src/stores/authState'
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log('axios error', error)
     if (error.response?.status === 401 || error.response?.status === 403) {
       // Token 過期，後端回傳 401
       const authState = useAuthStore()
