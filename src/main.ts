@@ -4,6 +4,7 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const app = createApp(App)
 
@@ -24,11 +25,14 @@ axios.interceptors.response.use(
       // 清除 token 和購物車
       authState.logout()
 
-      // 跳轉到登入頁
       router.push('/login')
-
-      // 可以顯示提示訊息
-      alert('登入已過期，請重新登入')
+      Swal.fire({
+        icon: 'error',
+        title: '登入已過期，請重新登入',
+        color: '#e1e1e1',
+        background: '#27272a',
+      })
+      router.push('/login')
     }
     return Promise.reject(error)
   }
