@@ -1,6 +1,6 @@
 # WJ 電商網站（前端）
 
-使用 Vue 3 + Pinia + Vue Router + Tailwind CSS + Axios 製作的簡易電商網站前端，支援會員登入、第三方登入（Google）、購物車、訂單紀錄，以及藍新金流（NewebPay）整合，模擬真實電商購物流程。
+使用 Vue 3 + Pinia + Vue Router + Tailwind CSS + axios 製作的簡易電商網站前端，支援會員登入、第三方登入（Google）、購物車、訂單紀錄，以及藍新金流（NewebPay）整合，模擬真實電商購物流程。
 
 ## 目前已完成功能
 
