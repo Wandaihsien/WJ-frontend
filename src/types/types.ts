@@ -31,3 +31,9 @@ export interface Order {
   total: string
   status: string
 }
+
+export interface GoogleLoginResponse {
+  credential: string
+  select_by?: string
+  clientId?: string
+}

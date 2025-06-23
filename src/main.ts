@@ -4,12 +4,16 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import axios from 'axios'
+import GoogleLoginPlugin from 'vue3-google-login'
 import Swal from 'sweetalert2'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(GoogleLoginPlugin, {
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+})
 app.mount('#app')
 
 import { useAuthStore } from '../src/stores/authState'

@@ -5,6 +5,7 @@ import { useAuthStore } from '../stores/authState'
 import axios from 'axios'
 import router from '../router'
 import Swal from 'sweetalert2'
+import googleLogin from '../components/googleLogin.vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 
@@ -24,6 +25,12 @@ const submit = async () => {
     const userId = response.data.user.id
     if (token) {
       authState.setUser(email.value, token, userId)
+      Swal.fire({
+        icon: 'success',
+        title: '登入成功',
+        color: '#e1e1e1',
+        background: '#27272a',
+      })
       router.push('/')
     } else {
       Swal.fire({
@@ -55,17 +62,17 @@ const submit = async () => {
       <form @submit.prevent="submit" class="w-full mt-[40px]">
         <div class="w-full flex flex-col">
           <label for="username" class="hidden text-red-500 text-[12px]"
-            >電郵或手機號碼</label
+            >電子信箱</label
           >
           <input
             v-model="email"
             id="username"
             type="text"
-            placeholder="電郵或手機號碼"
+            placeholder="電子信箱"
             required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="hidden text-red-500 text-[12px]">電郵或手機號碼是必須的</div> -->
+          <!-- <div class="hidden text-red-500 text-[12px]">電子信箱或手機號碼是必須的</div> -->
         </div>
         <div class="w-full flex flex-col mt-[30px]">
           <label for="password" class="hidden text-red-500 text-[12px]"
@@ -83,7 +90,7 @@ const submit = async () => {
         </div>
         <button
           type="submit"
-          class="w-full h-[46px] font-bold mt-[60px] bg-black text-white rounded-[0.25rem]"
+          class="w-full h-[46px] font-bold mt-[60px] bg-black text-white rounded-[0.25rem] hover:bg-gray-500"
         >
           登入
         </button>
@@ -91,11 +98,12 @@ const submit = async () => {
       <p class="text-[30px] font-semibold mt-[70px]">還不是會員嗎?</p>
       <RouterLink to="/signup">
         <button
-          class="w-full h-[46px] border border-black rounded-[0.25rem] mt-[20px] font-bold"
+          class="w-full h-[46px] border border-black rounded-[0.25rem] mt-[20px] font-bold hover:bg-gray-100"
         >
           註冊會員
         </button>
       </RouterLink>
+      <googleLogin class="mt-[20px]" />
     </main>
     <Footer />
   </div>

@@ -318,7 +318,7 @@ onMounted(() => {
           </div>
           <button
             @click="router.push('/checkout')"
-            class="w-full h-[45px] mt-[30px] bg-green-500 text-white rounded-[5px]"
+            class="w-full h-[45px] mt-[30px] bg-green-500 text-white rounded-[5px] hover:bg-green-400"
           >
             前往結帳
           </button>

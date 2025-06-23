@@ -164,7 +164,7 @@ onUnmounted(() => {
               </a>
               <div
                 @click="handleClickProduct(product)"
-                class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer"
+                class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer hover:bg-gray-200"
               >
                 <Cart />
               </div>

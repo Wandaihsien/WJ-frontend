@@ -367,7 +367,7 @@ onMounted(() => {
       <button
         type="submit"
         form="shippingForm"
-        class="w-full h-[34px] bg-green-500 text-white text-[12px] rounded-[5px] sm:max-w-[314px] md:max-w-[424px] lg:max-w-[524px]"
+        class="w-full h-[34px] bg-green-500 text-white text-[12px] rounded-[5px] hover:bg-green-400 sm:max-w-[314px] md:max-w-[424px] lg:max-w-[524px]"
       >
         提交訂單
       </button>

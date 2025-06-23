@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/authState'
 import axios, { AxiosError } from 'axios'
+import googleLogin from '../components/googleLogin.vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
 import Swal from 'sweetalert2'
@@ -18,6 +20,7 @@ const clearForm = () => {
   password.value = ''
 }
 
+const authStore = useAuthStore()
 const signup = async () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const errors: {
@@ -69,7 +72,16 @@ const signup = async () => {
         color: '#e1e1e1',
         background: '#27272a',
       })
-      router.push('/login')
+      const loginResponse = await axios.post(`${API_URL}/api/auth/login`, {
+        email: email.value,
+        password: password.value,
+      })
+      const token = loginResponse.data.token
+      const userId = loginResponse.data.user.id
+      if (token) {
+        authStore.setUser(email.value, token, userId)
+        router.push('/')
+      }
     }
   } catch (error: unknown) {
     const axiosError = error as AxiosError<any>
@@ -112,18 +124,18 @@ const signup = async () => {
       <form action="" class="w-full mt-[40px]">
         <div class="w-full flex flex-col">
           <label for="email" class="hidden text-red-500 text-[12px]"
-            >電郵</label
+            >電子信箱</label
           >
           <input
             v-model="email"
             id="email"
             type="email"
-            placeholder="電郵"
+            placeholder="電子信箱"
             autocomplete="email"
             required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="text-red-500 text-[12px]">電郵是必須的</div> -->
+          <!-- <div class="text-red-500 text-[12px]">是必須的</div> -->
         </div>
         <div class="w-full flex flex-col mt-[30px]">
           <label for="password" class="hidden text-red-500 text-[12px]"
@@ -142,7 +154,7 @@ const signup = async () => {
         </div>
         <button
           @click.prevent="signup"
-          class="w-full h-[46px] font-bold mt-[60px] bg-black text-white rounded-[0.25rem]"
+          class="w-full h-[46px] font-bold mt-[60px] bg-black text-white rounded-[0.25rem] hover:bg-gray-500"
         >
           註冊
         </button>
@@ -150,11 +162,12 @@ const signup = async () => {
       <p class="text-[30px] font-semibold mt-[70px]">已經有帳號?</p>
       <RouterLink to="/login">
         <button
-          class="w-full h-[46px] border border-black rounded-[0.25rem] mt-[20px] font-bold"
+          class="w-full h-[46px] border border-black rounded-[0.25rem] mt-[20px] font-bold hover:bg-gray-100"
         >
           登入
         </button>
       </RouterLink>
+      <googleLogin class="mt-[20px]" />
     </main>
     <Footer />
   </div>
