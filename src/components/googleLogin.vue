@@ -46,5 +46,7 @@ const handleGoogleLogin = async (response: GoogleLoginResponse) => {
 }
 </script>
 <template>
-  <GoogleLogin :callback="handleGoogleLogin" />
+  <div class="w-full flex justify-center items-center">
+    <GoogleLogin :callback="handleGoogleLogin" />
+  </div>
 </template>
