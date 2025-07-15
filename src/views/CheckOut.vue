@@ -47,7 +47,7 @@ const submit = async () => {
     const token = localStorage.getItem('token')
 
     if (!token) {
-      console.error('Token not found')
+      console.error('找不到token')
       return
     }
 

@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useCartStateStore } from '../stores/cartStateStore'
 import { useAuthStore } from '../stores/authState'
+import { debounce } from 'lodash'
 import { Product } from '../types/types'
 import router from '../router'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
-import Cart from '../components/svg/Cart.vue'
 import ProductInfo from '../components/ProductInfo.vue'
 import downArrow from '../components/svg/downArrow.vue'
+import Cart from '../components/svg/Cart.vue'
+import magnifier from '../components/svg/magnifier.vue'
 
 const cartStateStore = useCartStateStore()
 const authStore = useAuthStore()
@@ -19,12 +21,14 @@ const showProductInfo = ref(false)
 const selectedProduct = ref<Product | null>(null)
 
 const API_URL = import.meta.env.VITE_API_URL
-const products = ref<Product[]>([])
+const products = ref<Product[]>([]) // 顯示用資料
+const originalProducts = ref<Product[]>([]) // 原始資料
 const fetchProducts = async () => {
   try {
     const res = await axios.get(`${API_URL}/api/products`)
     products.value = res.data
-    products.value.sort((a, b) => a.price - b.price)
+    originalProducts.value = [...products.value]
+    searchAndSort()
   } catch (error) {
     console.error('取得商品失敗', error)
   }
@@ -67,25 +71,39 @@ const handleResize = () => {
   }
 }
 
+const priceSortedState = ref<'low' | 'high'>('low')
 const lowToHighPrice = () => {
-  products.value.sort((a, b) => {
-    return a.price - b.price
-  })
+  priceSortedState.value = 'low'
+  searchAndSort()
 }
 
 const highToLowPrice = () => {
-  products.value.sort((a, b) => {
-    return b.price - a.price
+  priceSortedState.value = 'high'
+  searchAndSort()
+}
+
+const searchTerm = ref('')
+const filterProducts = ref<Product[]>([])
+const searchAndSort = () => {
+  filterProducts.value = searchTerm.value
+    ? originalProducts.value.filter((product: Product) => {
+        return product.name.includes(searchTerm.value)
+      })
+    : [...originalProducts.value]
+  products.value = [...filterProducts.value].sort((a, b) => {
+    return priceSortedState.value === 'low'
+      ? a.price - b.price
+      : b.price - a.price
   })
 }
+watch(searchTerm, debounce(searchAndSort, 300))
 
 onMounted(() => {
   fetchProducts()
   window.addEventListener('resize', handleResize)
 })
 onUnmounted(() => {
-  handleResize()
-  window.addEventListener('resize', handleResize)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
@@ -120,6 +138,23 @@ onUnmounted(() => {
             所有商品
           </h1>
           <div class="w-full flex justify-end">
+            <!-- 搜尋欄 -->
+            <div
+              class="relative w-[calc(50%-15px)] mr-[20px] flex flex-col sm:w-[calc(33%-10px)] md:w-[159px]"
+            >
+              <div
+                class="w-full h-[36px] bg-gray-100 flex items-center pl-[10px] pr-[10px] ml-[10px]"
+              >
+                <magnifier />
+                <input
+                  v-model="searchTerm"
+                  type="text"
+                  placeholder="請輸入關鍵字"
+                  class="w-full h-[36px] bg-gray-100 flex items-center text-[12px] pl-[5px] pr-[10px] focus:outline-none"
+                />
+              </div>
+            </div>
+            <!-- 排序按鈕 -->
             <div
               @mouseenter="isDesktop && (isOpen = true)"
               @mouseleave="isDesktop && (isOpen = false)"

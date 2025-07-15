@@ -8,7 +8,6 @@ import { GoogleLoginResponse } from '../types/types'
 const authStore = useAuthStore()
 const API_URL = import.meta.env.VITE_API_URL
 const handleGoogleLogin = async (response: GoogleLoginResponse) => {
-  console.log('Google 登入 response:', response)
   const googleToken = response.credential
   try {
     const { data } = await axios.post(`${API_URL}/api/auth/googleLogin`, {

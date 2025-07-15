@@ -39,6 +39,7 @@ const signup = async () => {
       errors.password = '密碼至少需要6個字元'
     }
   }
+
   if (Object.keys(errors).length > 0) {
     clearForm()
     Swal.fire({
@@ -135,7 +136,6 @@ const signup = async () => {
             required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="text-red-500 text-[12px]">是必須的</div> -->
         </div>
         <div class="w-full flex flex-col mt-[30px]">
           <label for="password" class="hidden text-red-500 text-[12px]"
@@ -150,7 +150,6 @@ const signup = async () => {
             required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="text-red-500 text-[12px]">密碼是必須的</div> -->
         </div>
         <button
           @click.prevent="signup"

@@ -17,7 +17,7 @@ app.use(GoogleLoginPlugin, {
 app.mount('#app')
 
 import { useAuthStore } from '../src/stores/authState'
-// 1小時候會登出
+
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -28,14 +28,14 @@ axios.interceptors.response.use(
       // 清除 token 和購物車
       authState.logout()
 
-      router.push('/login')
       Swal.fire({
         icon: 'error',
         title: '登入已過期，請重新登入',
         color: '#e1e1e1',
         background: '#27272a',
+      }).then(() => {
+        router.push('/login')
       })
-      router.push('/login')
     }
     return Promise.reject(error)
   }

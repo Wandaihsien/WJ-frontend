@@ -14,7 +14,40 @@ const password = ref('')
 const authState = useAuthStore()
 const API_URL = import.meta.env.VITE_API_URL
 
+const clearForm = () => {
+  email.value = ''
+  password.value = ''
+}
 const submit = async () => {
+  const errors: {
+    general?: string
+    email?: string
+    password?: string
+  } = {}
+
+  if (email.value.trim() === '' && password.value.trim() === '') {
+    errors.general = '請輸入帳號及密碼'
+  } else {
+    if (email.value.trim() === '') {
+      errors.email = '帳號不能為空'
+    }
+
+    if (password.value.trim() === '') {
+      errors.password = '密碼不能為空'
+    }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    clearForm()
+    Swal.fire({
+      icon: 'error',
+      title: '錯誤',
+      text: Object.values(errors).join('\n'),
+      color: '#e1e1e1',
+      background: '#27272a',
+    })
+    return
+  }
   try {
     const response = await axios.post(`${API_URL}/api/auth/login`, {
       email: email.value,
@@ -69,10 +102,8 @@ const submit = async () => {
             id="username"
             type="text"
             placeholder="電子信箱"
-            required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="hidden text-red-500 text-[12px]">電子信箱或手機號碼是必須的</div> -->
         </div>
         <div class="w-full flex flex-col mt-[30px]">
           <label for="password" class="hidden text-red-500 text-[12px]"
@@ -83,10 +114,8 @@ const submit = async () => {
             id="password"
             type="password"
             placeholder="(至少6個字元)"
-            required
             class="w-full pb-[10px] pt-[5px] placeholder:text-[14px] outline-none border-b text-[14px]"
           />
-          <!-- <div class="hidden text-red-500 text-[12px]">密碼是必須的</div> -->
         </div>
         <button
           type="submit"
