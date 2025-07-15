@@ -1,6 +1,6 @@
 <script setup></script>
 <template>
-  <footer class="w-full mt-[150px]">
+  <footer class="w-full mt-[50px]">
     <div class="w-full h-[1px] bg-gray-200"></div>
     <div class="mt-[40px] text-center text-xs text-gray-700">
       <p>Email:</p>

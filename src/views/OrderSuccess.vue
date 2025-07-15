@@ -41,8 +41,10 @@ const orderNo = route.query.orderNo
         <span class="text-black text-[11px]">訂單確認</span>
       </div>
     </div>
-    <div class="flex items-center justify-center mt-[100px] px-4 py-5">
-      <div class="w-full max-w-[600px] border border-gray-300 p-8 text-center">
+    <div class="w-full flex items-center justify-center mt-[100px] px-4 py-5">
+      <div
+        class="w-full max-w-[600px] border border-gray-300 p-8 text-center sm:mx-auto"
+      >
         <div class="text-green-500 text-6xl mb-4">✓</div>
         <div class="text-gray-800 text-2xl font-semibold mb-2">
           訂單建立成功

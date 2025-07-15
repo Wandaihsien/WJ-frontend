@@ -21,31 +21,45 @@ const showProductInfo = ref(false)
 const selectedProduct = ref<Product | null>(null)
 
 const API_URL = import.meta.env.VITE_API_URL
-const products = ref<Product[]>([]) // 顯示用資料
 const originalProducts = ref<Product[]>([]) // 原始資料
 const fetchProducts = async () => {
   try {
     const res = await axios.get(`${API_URL}/api/products`)
-    products.value = res.data
-    originalProducts.value = [...products.value]
+    originalProducts.value = res.data
     searchAndSort()
   } catch (error) {
     console.error('取得商品失敗', error)
   }
 }
 
-const handleClickProduct = (product: Product) => {
-  if (authStore.isLoggedIn) {
-    selectedProduct.value = product
-    showProductInfo.value = true
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: '請先登入會員',
-      color: '#e1e1e1',
-      background: '#27272a',
-    })
-    router.push('/login')
+const currentPage = ref(1)
+const finalProducts = ref<Product[]>([])
+const pageItems = 9 //1頁商品數量
+const totalPages = computed(() => {
+  return Math.ceil(finalProducts.value.length / pageItems)
+})
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * pageItems
+  const end = start + pageItems
+  return finalProducts.value.slice(start, end)
+})
+
+const goToPage = (page: any) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
+
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
   }
 }
 
@@ -83,20 +97,38 @@ const highToLowPrice = () => {
 }
 
 const searchTerm = ref('')
-const filterProducts = ref<Product[]>([])
+// 關鍵字功能
 const searchAndSort = () => {
-  filterProducts.value = searchTerm.value
+  let filtered = searchTerm.value
     ? originalProducts.value.filter((product: Product) => {
         return product.name.includes(searchTerm.value)
       })
     : [...originalProducts.value]
-  products.value = [...filterProducts.value].sort((a, b) => {
+
+  finalProducts.value = filtered.sort((a, b) => {
     return priceSortedState.value === 'low'
       ? a.price - b.price
       : b.price - a.price
   })
+
+  currentPage.value = 1
 }
 watch(searchTerm, debounce(searchAndSort, 300))
+
+const handleClickProduct = (product: Product) => {
+  if (authStore.isLoggedIn) {
+    selectedProduct.value = product
+    showProductInfo.value = true
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: '請先登入會員',
+      color: '#e1e1e1',
+      background: '#27272a',
+    })
+    router.push('/login')
+  }
+}
 
 onMounted(() => {
   fetchProducts()
@@ -138,7 +170,7 @@ onUnmounted(() => {
             所有商品
           </h1>
           <div class="w-full flex justify-end">
-            <!-- 搜尋欄 -->
+            <!-- 關鍵字 -->
             <div
               class="relative w-[calc(50%-15px)] mr-[20px] flex flex-col sm:w-[calc(33%-10px)] md:w-[159px]"
             >
@@ -187,7 +219,11 @@ onUnmounted(() => {
           <div
             class="grid grid-cols-2 mx-[10px] gap-x-[10px] gap-y-[60px] mt-[40px] sm:grid-cols-3"
           >
-            <div v-for="product in products" :key="product.id" class="relative">
+            <div
+              v-for="product in paginatedProducts"
+              :key="product.id"
+              class="relative"
+            >
               <a class="cursor-default pointer-events-none" href="#">
                 <div class="aspect-square">
                   <img
@@ -213,6 +249,37 @@ onUnmounted(() => {
                 </div>
               </div>
             </div>
+          </div>
+          <div class="flex justify-center gap-[15px] mt-[50px]">
+            <button
+              v-show="currentPage > 1"
+              @click="previousPage"
+              :disabled="currentPage === 1"
+              class="w-[25px] h-[25px] rounded-[50%] text-[12px] hover:bg-gray-200"
+            >
+              <
+            </button>
+            <button
+              @click="goToPage(page)"
+              v-for="page in totalPages"
+              :key="page"
+              class="w-[25px] h-[25px] rounded-[50%] text-[12px] cursor-default"
+              :class="
+                currentPage === page
+                  ? 'text-white bg-black'
+                  : 'text-black hover:bg-gray-200 cursor-pointer'
+              "
+            >
+              {{ page }}
+            </button>
+            <button
+              v-show="currentPage < totalPages"
+              @click="nextPage"
+              :disabled="currentPage === totalPages"
+              class="w-[25px] h-[25px] rounded-[50%] text-[12px] hover:bg-gray-200"
+            >
+              >
+            </button>
           </div>
         </div>
       </div>

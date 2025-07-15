@@ -193,10 +193,10 @@ onBeforeUnmount(() => {
         </RouterLink>
       </div>
     </Transition>
-    <div class="w-full h-[34.56px] bg-red-800">
-      <a href="#" class="h-full flex items-center justify-center">
+    <div class="w-full h-[34.56px] bg-cyan-700">
+      <div class="h-full flex items-center justify-center">
         <p class="text-white text-xs inline-block">全館免運</p>
-      </a>
+      </div>
     </div>
     <nav class="w-full">
       <div class="w-full h-[60px] flex bg-white">
