@@ -268,13 +268,13 @@ onMounted(() => {
               <button
                 @click="cancelButton"
                 type="button"
-                class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px]"
+                class="border bg-white w-[50%] h-[34px] rounded-sm md:max-w-[54px] hover:border-cyan-700"
               >
                 取消
               </button>
               <button
                 type="submit"
-                class="border bg-black w-[50%] h-[34px] text-white rounded-sm md:max-w-[82px]"
+                class="border bg-cyan-700 w-[50%] h-[34px] text-white rounded-sm md:max-w-[82px]"
               >
                 儲存變更
               </button>

@@ -13,6 +13,7 @@ import ProductInfo from '../components/ProductInfo.vue'
 import downArrow from '../components/svg/downArrow.vue'
 import Cart from '../components/svg/Cart.vue'
 import magnifier from '../components/svg/magnifier.vue'
+import BackToTop from '../components/svg/BackToTop.vue'
 
 const cartStateStore = useCartStateStore()
 const authStore = useAuthStore()
@@ -143,6 +144,7 @@ onUnmounted(() => {
   <div class="w-full min-h-screen flex flex-col">
     <NavBar />
     <main class="flex-grow relative">
+      <BackToTop />
       <ProductInfo
         v-if="showProductInfo && selectedProduct"
         @close="showProductInfo = false"
@@ -209,7 +211,7 @@ onUnmounted(() => {
                   v-for="option in options"
                   :key="option"
                   @click="selectOption(option)"
-                  class="w-full h-[36px] text-[12px] px-[10px] flex items-center text-gray-400 text-left hover:bg-black hover:text-white hover:"
+                  class="w-full h-[36px] text-[12px] px-[10px] flex items-center text-gray-400 text-left hover:bg-cyan-700 hover:text-white hover:"
                 >
                   {{ option }}
                 </li>
@@ -217,7 +219,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div
-            class="grid grid-cols-2 mx-[10px] gap-x-[10px] gap-y-[60px] mt-[40px] sm:grid-cols-3"
+            class="grid grid-cols-2 mx-[10px] gap-x-[20px] gap-y-[60px] mt-[40px] sm:grid-cols-3"
           >
             <div
               v-for="product in paginatedProducts"
@@ -235,7 +237,7 @@ onUnmounted(() => {
               </a>
               <div
                 @click="handleClickProduct(product)"
-                class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer hover:bg-gray-200"
+                class="w-[40px] h-[40px] rounded-[50%] bg-white absolute bottom-[55px] right-[10px] cursor-pointer hover:text-cyan-700"
               >
                 <Cart />
               </div>
@@ -266,7 +268,7 @@ onUnmounted(() => {
               class="w-[25px] h-[25px] rounded-[50%] text-[12px] cursor-default"
               :class="
                 currentPage === page
-                  ? 'text-white bg-black'
+                  ? 'text-white bg-cyan-700'
                   : 'text-black hover:bg-gray-200 cursor-pointer'
               "
             >
