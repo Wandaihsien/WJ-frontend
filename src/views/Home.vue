@@ -10,10 +10,10 @@ import Footer from '../components/Footer.vue'
 import BackToTop from '../components/svg/BackToTop.vue'
 
 const slidesImg = [
-  '/src/img/輪播圖1.png',
-  '/src/img/輪播圖3.png',
-  '/src/img/輪播圖4.png',
-  '/src/img/輪播圖5.png',
+  '/img/輪播圖1.png',
+  '/img/輪播圖3.png',
+  '/img/輪播圖4.png',
+  '/img/輪播圖5.png',
 ]
 
 const products = [
@@ -21,37 +21,37 @@ const products = [
     id: 1,
     name: '騷動項鍊',
     price: 'NT$5210',
-    image: '/src/img/騷動項鍊5210.png',
+    image: '/img/騷動項鍊5210.png',
   },
   {
     id: 2,
     name: '宇宙項鍊',
     price: 'NT$2850',
-    image: '/src/img/宇宙項鍊2850.png',
+    image: '/img/宇宙項鍊2850.png',
   },
   {
     id: 3,
     name: '城市手環',
     price: 'NT$2350',
-    image: '/src/img/城市手環2350.png',
+    image: '/img/城市手環2350.png',
   },
   {
     id: 4,
     name: '保證手環',
     price: 'NT$2950',
-    image: '/src/img/保證手環2950.png',
+    image: '/img/保證手環2950.png',
   },
   {
     id: 5,
     name: '狂亂項鍊',
     price: 'NT$3650',
-    image: '/src/img/狂亂項鍊3650.png',
+    image: '/img/狂亂項鍊3650.png',
   },
   {
     id: 6,
     name: '反彈項鍊',
     price: 'NT$3650',
-    image: '/src/img/反彈項鍊3650.png',
+    image: '/img/反彈項鍊3650.png',
   },
 ]
 
