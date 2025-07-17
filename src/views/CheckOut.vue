@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, Transition } from 'vue'
 import axios from 'axios'
 import { RouterLink } from 'vue-router'
 import { ShippingInfo } from '../types/types'
@@ -99,6 +99,11 @@ const submit = async () => {
   }
 }
 
+const isSlide = ref(false)
+const slideClick = () => {
+  isSlide.value = !isSlide.value
+}
+
 onMounted(() => {
   cartStore.loadCart()
   fetchShippingInfo()
@@ -146,114 +151,171 @@ onMounted(() => {
       class="mt-[20px] mx-[20px] border-[1px] sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
     >
       <!-- 手機版購物車 -->
-      <section class="border-b-[1px] sm:hidden">
+      <section class="sm:hidden">
         <div
-          class="w-full flex items-center text-[15px] font-bold p-[15px] border-b-[1px]"
+          @click="slideClick"
+          class="w-full flex justify-between text-[15px] font-bold p-[15px] border-b-[1px]"
         >
-          <h3>合計:NT${{ cartStore.cartPriceTotal }}</h3>
-          <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
-        </div>
-        <div
-          v-for="item in cartStore.cartItems"
-          :key="item.id"
-          class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
-        >
-          <div class="relative grid grid-cols-[auto_1fr_auto]">
-            <div>
-              <img
-                :src="item.product.image"
-                alt="商品圖片"
-                class="w-[60px] h-[60px] object-cover"
-              />
-            </div>
-            <div class="mt-[5px] ml-[10px]">
-              <div class="text-[12px]">{{ item.product.name }}</div>
-              <div class="text-[10px] text-gray-400">F</div>
-            </div>
-            <!-- 單件價格 -->
-            <div class="absolute top-[50px] right-0 flex items-end">
-              <span class="text-[12px]">NT${{ item.product.price }}</span>
-            </div>
+          <div class="flex items-center">
+            <h3>合計:NT${{ cartStore.cartPriceTotal }}</h3>
+            <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
           </div>
-          <div class="mt-[40px] flex justify-between">
-            <!-- 數量 -->
-            <div class="text-[11px] text-gray-700">
-              <span>數量:{{ item.quantity }}</span>
-            </div>
-            <!-- 小計 -->
-            <div class="flex items-end">
-              <span class="text-[12px]"
-                >NT${{ item.product.price * item.quantity }}</span
-              >
-            </div>
+          <div
+            class="font-bold"
+            :class="[
+              'transition-transform',
+              'duration-300',
+              !isSlide ? 'rotate-270' : 'rotate-90',
+            ]"
+          >
+            <
           </div>
         </div>
+        <Transition name="slide">
+          <div v-if="isSlide">
+            <div
+              v-for="item in cartStore.cartItems"
+              :key="item.id"
+              class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
+            >
+              <div class="relative grid grid-cols-[auto_1fr_auto]">
+                <div>
+                  <img
+                    :src="item.product.image"
+                    alt="商品圖片"
+                    class="w-[60px] h-[60px] object-cover"
+                  />
+                </div>
+                <div class="mt-[5px] ml-[10px]">
+                  <div class="text-[12px]">{{ item.product.name }}</div>
+                  <div class="text-[10px] text-gray-400">F</div>
+                </div>
+                <!-- 單件價格 -->
+                <div class="absolute top-[50px] right-0 flex items-end">
+                  <span class="text-[12px]">NT${{ item.product.price }}</span>
+                </div>
+              </div>
+              <div class="mt-[40px] flex justify-between">
+                <!-- 數量 -->
+                <div class="text-[11px] text-gray-700">
+                  <span>數量:{{ item.quantity }}</span>
+                </div>
+                <!-- 小計 -->
+                <div class="flex items-end">
+                  <span class="text-[12px]"
+                    >NT${{ item.product.price * item.quantity }}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="border-t-[1px] p-[10px] flex flex-col gap-[20px]">
+              <div class="flex justify-between text-[12px]">
+                <span>小計:</span>
+                <span>NT${{ cartStore.cartPriceTotal }}</span>
+              </div>
+              <div class="flex justify-between text-[12px]">
+                <span>運費:</span>
+                <span>NT$0</span>
+              </div>
+              <div class="w-full border-b-[1px] bg-gray-200"></div>
+              <div class="flex justify-between text-[12px] font-bold">
+                <span>合計 :</span>
+                <span>NT${{ cartStore.cartPriceTotal }}</span>
+              </div>
+            </div>
+            <div
+              @click="slideClick"
+              class="h-[57px] border-t-[1px] flex justify-center items-center"
+            >
+              <div class="w-[10px] font-bold text-center rotate-270">></div>
+            </div>
+          </div>
+        </Transition>
       </section>
       <!-- 桌機版購物車 -->
       <section
-        class="hidden border-b-[1px] sm:block sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
+        class="hidden sm:block sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
       >
         <div
-          class="w-full h-[94px] flex flex-col justify-center items-center text-[15px] font-bold p-[15px] border-b-[1px]"
+          @click="slideClick"
+          class="h-[94px] flex flex-col justify-center items-center text-[15px] p-[15px] border-b-[1px] cursor-pointer"
         >
-          <h3>合計:NT${{ cartStore.cartPriceTotal }}</h3>
-          <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
-        </div>
-        <div class="sm:grid grid-cols-[1.5fr_1fr_1fr_1fr] p-[15px] text-[11px]">
-          <div>商品資料</div>
-          <div>單件價格</div>
-          <div class="text-center">數量</div>
-          <div class="text-right">小計</div>
-        </div>
-        <div
-          v-for="item in cartStore.cartItems"
-          :key="item.id"
-          class="relative p-[10px] border-t-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
-        >
-          <div class="relative grid grid-cols-[auto_1fr_auto]">
-            <div>
-              <img
-                :src="item.product.image"
-                alt="商品圖片"
-                class="w-[60px] h-[60px] object-cover"
-              />
-            </div>
-            <div class="mt-[5px] ml-[10px]">
-              <div class="text-[12px]">{{ item.product.name }}</div>
-              <div class="text-[10px] text-gray-400">F</div>
-            </div>
-          </div>
-          <!-- 單件價格 -->
-          <div class="sm:grid">
-            <span class="text-[12px]">NT${{ item.product.price }}</span>
-          </div>
-          <!-- 數量 -->
-          <div class="text-center sm:block">
-            <span class="text-[12px]">{{ item.quantity }}</span>
-          </div>
-          <!-- 小計 -->
-          <div class="text-right sm:block">
-            <span class="text-[12px]"
-              >NT${{ item.product.price * item.quantity }}</span
+          <h3 class="font-bold">合計:NT${{ cartStore.cartPriceTotal }}</h3>
+          <div class="flex gap-2">
+            <span>購物車 ({{ cartStore.cartItems.length }}件)</span>
+            <div
+              class="font-bold"
+              :class="[
+                'transition-transform',
+                'duration-300',
+                !isSlide ? 'rotate-270' : 'rotate-90',
+              ]"
             >
+              <
+            </div>
           </div>
         </div>
+        <Transition name="slide">
+          <div v-if="isSlide">
+            <div
+              class="border-b-[1px] sm:grid grid-cols-[1.5fr_1fr_1fr_1fr] p-[15px] text-[11px]"
+            >
+              <div>商品資料</div>
+              <div>單件價格</div>
+              <div class="text-center">數量</div>
+              <div class="text-right">小計</div>
+            </div>
+            <div
+              v-for="item in cartStore.cartItems"
+              :key="item.id"
+              class="relative p-[10px] border-b-[1px] sm:w-full sm:grid sm:grid-cols-[1.5fr_1fr_1fr_1fr]"
+            >
+              <div class="relative grid grid-cols-[auto_1fr_auto]">
+                <div>
+                  <img
+                    :src="item.product.image"
+                    alt="商品圖片"
+                    class="w-[60px] h-[60px] object-cover"
+                  />
+                </div>
+                <div class="mt-[5px] ml-[10px]">
+                  <div class="text-[12px]">{{ item.product.name }}</div>
+                  <div class="text-[10px] text-gray-400">F</div>
+                </div>
+              </div>
+              <!-- 單件價格 -->
+              <div class="sm:grid">
+                <span class="text-[12px]">NT${{ item.product.price }}</span>
+              </div>
+              <!-- 數量 -->
+              <div class="text-center sm:block">
+                <span class="text-[12px]">{{ item.quantity }}</span>
+              </div>
+              <!-- 小計 -->
+              <div class="text-right sm:block">
+                <span class="text-[12px]"
+                  >NT${{ item.product.price * item.quantity }}</span
+                >
+              </div>
+            </div>
+            <div class="p-[15px] flex flex-col gap-[20px]">
+              <div class="flex justify-between text-[12px]">
+                <span>小計:</span>
+                <span>NT${{ cartStore.cartPriceTotal }}</span>
+              </div>
+              <div class="flex justify-between text-[12px]">
+                <span>運費:</span>
+                <span>NT$0</span>
+              </div>
+              <div class="w-full border-b-[1px] bg-gray-200"></div>
+              <div class="flex justify-between text-[12px] font-bold">
+                <span>合計 :</span>
+                <span>NT${{ cartStore.cartPriceTotal }}</span>
+              </div>
+            </div>
+          </div>
+        </Transition>
       </section>
-      <div class="p-[15px] flex flex-col gap-[20px]">
-        <div class="flex justify-between text-[12px]">
-          <span>小計:</span>
-          <span>NT${{ cartStore.cartPriceTotal }}</span>
-        </div>
-        <div class="flex justify-between text-[12px]">
-          <span>運費:</span>
-          <span>NT$0</span>
-        </div>
-        <div class="w-full h-[1px] bg-gray-200"></div>
-        <div class="flex justify-between text-[12px] font-bold">
-          <span>合計 :</span>
-          <span>NT${{ cartStore.cartPriceTotal }}</span>
-        </div>
-      </div>
     </div>
     <div
       class="mt-[20px] mx-[20px] flex justify-end sm:max-w-[720px] sm:mx-auto md:max-w-[938px] lg:max-w-[1138px]"
@@ -383,3 +445,24 @@ onMounted(() => {
     <div class="h-[60px]"></div>
   </div>
 </template>
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: 0.5s ease;
+  overflow: hidden;
+}
+
+.slide-enter-from {
+  max-height: 0;
+}
+.slide-enter-to {
+  max-height: 800px;
+}
+
+.slide-leave-from {
+  max-height: 800px;
+}
+.slide-leave-to {
+  max-height: 0;
+}
+</style>

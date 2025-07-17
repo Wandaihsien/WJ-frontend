@@ -2,7 +2,11 @@
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      rotate: {
+        270: '270deg',
+      },
+    },
     screens: {
       xs: '375px',
       sm: '768px',

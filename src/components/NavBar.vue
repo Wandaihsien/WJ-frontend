@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
           >
             <button
               @click="handleCheckout"
-              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-cyan-700 text-white text-[16px] font-bold sm:text-[1.5vw] lg:w-full lg:text-[1vw]"
+              class="w-[calc(100%-20px)] pl-[10px] pr-[10px] h-[36px] bg-cyan-700 text-white text-[16px] font-bold hover:bg-cyan-600 sm:text-[1.5vw] lg:w-full lg:text-[1vw]"
             >
               訂單結帳
             </button>
