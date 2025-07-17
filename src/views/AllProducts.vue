@@ -154,7 +154,7 @@ onUnmounted(() => {
       <div class="w-full md:grid grid-cols-4 lg:grid-cols-8">
         <div class="hidden md:block col-span-1 lg:col-span-2 pl-[50px]">
           <div class="md:mt-[20px] ml-[50px] text-[12px] text-gray-500">
-            全部商品 / 所有商品
+            所有商品 / 所有商品
           </div>
           <div
             class="md:w-[100px] h-[1px] bg-gray-500 ml-[50px] mt-[10px]"
@@ -162,7 +162,9 @@ onUnmounted(() => {
           <ul
             class="md:flex flex-col mt-[30px] pl-[50px] font-black text-[14px] gap-[10px]"
           >
-            <li>所有商品</li>
+            <RouterLink to="/allproducts">
+              <li>所有商品</li>
+            </RouterLink>
           </ul>
         </div>
         <div class="mx-[10px] my-[40px] md:col-span-3 lg:col-span-5">

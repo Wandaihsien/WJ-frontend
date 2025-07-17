@@ -89,7 +89,9 @@ onBeforeUnmount(() => {
             <a href="">首頁</a>
           </li>
           <li>
-            <RouterLink to="/" class="cursor-pointer">所有商品</RouterLink>
+            <RouterLink to="/allproducts" class="cursor-pointer"
+              >所有商品
+            </RouterLink>
           </li>
         </ul>
         <!-- <div
@@ -204,7 +206,7 @@ onBeforeUnmount(() => {
           <div class="ml-[20px]">
             <RouterLink to="/">
               <img
-                src="/src/img/WJ.jpg"
+                src="/src/img/WJ.png"
                 class="w-[30px] h-[30px] cursor-pointer"
                 alt="logo"
               />
@@ -245,11 +247,11 @@ onBeforeUnmount(() => {
         class="hidden lg:flex w-full h-[47px] bg-black items-center justify-center"
       >
         <ul class="flex text-white text-[12px] gap-[30px]">
-          <!-- <li>
-            <RouterLink to="/AllProducts">首頁</RouterLink>
-          </li> -->
           <li>
-            <RouterLink to="/">所有商品</RouterLink>
+            <RouterLink to="/">首頁</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/allproducts">所有商品</RouterLink>
           </li>
         </ul>
       </div>

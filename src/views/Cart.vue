@@ -87,7 +87,7 @@ onMounted(() => {
     >
       <h5 class="text-[18px] font-bold">你的購物車是空的</h5>
       <p class="text-[12px]">記得加入商品到你的購物車</p>
-      <RouterLink to="/" class="mt-[20px]">
+      <RouterLink to="/allproducts" class="mt-[20px]">
         <button
           class="w-[180px] h-[34px] bg-black text-white text-center text-[12px] sm:w-[364px]"
         >
