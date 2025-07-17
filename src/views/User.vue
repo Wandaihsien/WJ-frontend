@@ -8,6 +8,7 @@ import router from '../router'
 import NavBar from '../components/NavBar.vue'
 import UserIcon2 from '../components/svg/UserIcon2.vue'
 import Footer from '../components/Footer.vue'
+import BackToTop from '../components/svg/BackToTop.vue'
 
 const tabs = ['個人資訊', '訂單']
 const activeTab = ref('個人資訊')
@@ -127,7 +128,8 @@ onMounted(() => {
 <template>
   <div class="w-full h-screen">
     <NavBar />
-    <main class="w-full">
+    <main class="w-full relative">
+      <BackToTop />
       <div
         class="hidden sm:block sm:max-w-[718px] sm:mx-auto sm:my-[20px] md:max-w-[938px] lg:max-w-[1108px]"
       >

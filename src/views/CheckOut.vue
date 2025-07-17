@@ -6,6 +6,7 @@ import { ShippingInfo } from '../types/types'
 import { useCartStore } from '../stores/useCartStore'
 import Swal from 'sweetalert2'
 import NavBar from '../components/NavBar.vue'
+import BackToTop from '../components/svg/BackToTop.vue'
 
 const cartStore = useCartStore()
 const API_URL = import.meta.env.VITE_API_URL
@@ -104,8 +105,9 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full h-screen relative">
     <NavBar />
+    <BackToTop />
     <!-- 進度條 -->
     <div class="flex my-[40px] mx-[60px] sm:max-w-[720px] sm:mx-auto">
       <div
@@ -373,7 +375,7 @@ onMounted(() => {
       </button>
       <RouterLink
         to="/cart"
-        class="text-[12px] text-center mt-[15px] text-blue-500"
+        class="text-[12px] text-center mt-[15px] text-blue-500 hover:text-blue-400"
       >
         < 返回購物車
       </RouterLink>

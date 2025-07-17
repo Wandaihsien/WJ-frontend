@@ -8,6 +8,7 @@ import Footer from '../components/Footer.vue'
 import Plus from '../components/svg/Plus.vue'
 import Minus from '../components/svg/Minus.vue'
 import Cross from '../components/svg/Cross.vue'
+import BackToTop from '../components/svg/BackToTop.vue'
 
 const minus = (item: any) => {
   if (item.quantity > 1) {
@@ -44,8 +45,9 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full h-screen relative">
     <NavBar />
+    <BackToTop />
     <!-- 進度條 -->
     <div class="flex my-[40px] mx-[60px] sm:max-w-[720px] sm:mx-auto">
       <div

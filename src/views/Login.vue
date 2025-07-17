@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import googleLogin from '../components/googleLogin.vue'
 import NavBar from '../components/NavBar.vue'
 import Footer from '../components/Footer.vue'
+import BackToTop from '../components/svg/BackToTop.vue'
 
 const email = ref('')
 const password = ref('')
@@ -89,8 +90,9 @@ const submit = async () => {
   <div class="w-full min-h-screen">
     <NavBar />
     <main
-      class="w-full pl-[30px] pr-[30px] pt-[20px] pb-[20px] sm:w-[420px] flex justify-center flex-col mx-auto mt-[20px]"
+      class="w-full relative pl-[30px] pr-[30px] pt-[20px] pb-[20px] sm:w-[420px] flex justify-center flex-col mx-auto mt-[20px]"
     >
+      <BackToTop />
       <p class="text-[32px] font-black">登入</p>
       <form @submit.prevent="submit" class="w-full mt-[40px]">
         <div class="w-full flex flex-col">
